@@ -1,0 +1,6 @@
+@ARCN.API_HostAddress = http://localhost:5069
+
+GET {{ARCN.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

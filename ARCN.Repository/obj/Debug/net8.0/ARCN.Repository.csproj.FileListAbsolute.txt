@@ -1,0 +1,11 @@
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Repository\bin\Debug\net8.0\ARCN.Repository.deps.json
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Repository\bin\Debug\net8.0\ARCN.Repository.dll
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Repository\bin\Debug\net8.0\ARCN.Repository.pdb
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Repository\obj\Debug\net8.0\ARCN.Repository.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Repository\obj\Debug\net8.0\ARCN.Repository.AssemblyInfoInputs.cache
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Repository\obj\Debug\net8.0\ARCN.Repository.AssemblyInfo.cs
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Repository\obj\Debug\net8.0\ARCN.Repository.csproj.CoreCompileInputs.cache
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Repository\obj\Debug\net8.0\ARCN.Repository.dll
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Repository\obj\Debug\net8.0\refint\ARCN.Repository.dll
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Repository\obj\Debug\net8.0\ARCN.Repository.pdb
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Repository\obj\Debug\net8.0\ref\ARCN.Repository.dll

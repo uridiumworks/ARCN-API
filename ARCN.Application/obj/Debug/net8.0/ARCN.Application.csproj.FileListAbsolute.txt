@@ -1,0 +1,11 @@
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Application\bin\Debug\net8.0\ARCN.Application.deps.json
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Application\bin\Debug\net8.0\ARCN.Application.dll
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Application\bin\Debug\net8.0\ARCN.Application.pdb
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Application\obj\Debug\net8.0\ARCN.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Application\obj\Debug\net8.0\ARCN.Application.AssemblyInfoInputs.cache
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Application\obj\Debug\net8.0\ARCN.Application.AssemblyInfo.cs
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Application\obj\Debug\net8.0\ARCN.Application.csproj.CoreCompileInputs.cache
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Application\obj\Debug\net8.0\ARCN.Application.dll
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Application\obj\Debug\net8.0\refint\ARCN.Application.dll
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Application\obj\Debug\net8.0\ARCN.Application.pdb
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.Application\obj\Debug\net8.0\ref\ARCN.Application.dll
