@@ -19,11 +19,7 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="AutoMaps\" />
-	  <Folder Include="DataModels\" />
-	  <Folder Include="FluentValidations\" />
 	  <Folder Include="Helper\Constants\" />
-	  <Folder Include="Interfaces\Services\" />
-	  <Folder Include="TokenProviders\" />
 	</ItemGroup>
 
 </Project>
