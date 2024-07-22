@@ -91,6 +91,7 @@ C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.UnitTest\obj\Debug\net8.0\ARCN.Unit
 C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.UnitTest\obj\Debug\net8.0\ARCN.UnitTest.AssemblyInfoInputs.cache
 C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.UnitTest\obj\Debug\net8.0\ARCN.UnitTest.AssemblyInfo.cs
 C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.UnitTest\obj\Debug\net8.0\ARCN.UnitTest.csproj.CoreCompileInputs.cache
+C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.UnitTest\obj\Debug\net8.0\ARCN.UnitTest.sourcelink.json
 C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.UnitTest\obj\Debug\net8.0\ARCN.Uni.12BE41D5.Up2Date
 C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.UnitTest\obj\Debug\net8.0\ARCN.UnitTest.dll
 C:\Users\USER\Documents\GitHub\ARCN-API\ARCN.UnitTest\obj\Debug\net8.0\refint\ARCN.UnitTest.dll
