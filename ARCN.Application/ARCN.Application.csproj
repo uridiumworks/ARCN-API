@@ -5,5 +5,25 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="13.0.1" />
+		<PackageReference Include="FluentValidation" Version="11.9.1" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.1" />
+		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Refit" Version="7.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\ARCN.Domain\ARCN.Domain.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="AutoMaps\" />
+	  <Folder Include="DataModels\" />
+	  <Folder Include="FluentValidations\" />
+	  <Folder Include="Helper\Constants\" />
+	  <Folder Include="Interfaces\Services\" />
+	  <Folder Include="TokenProviders\" />
+	</ItemGroup>
 
 </Project>

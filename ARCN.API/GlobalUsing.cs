@@ -1,0 +1,19 @@
+﻿global using System.Diagnostics;
+global using System.Security.Claims;
+global using System.Security.Principal;
+global using Microsoft.AspNetCore.HttpLogging;
+global using Microsoft.AspNetCore.OData.Batch;
+global using Microsoft.AspNetCore.OData;
+global using Microsoft.OData.Edm;
+global using System.Text.Json.Serialization;
+global using Microsoft.OpenApi.Models;
+global using Microsoft.AspNetCore.Authentication.Cookies;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.IdentityModel.Tokens;
+global using System.Text;
+global using Microsoft.AspNetCore.Authorization;
+global using AutoMapper;
+global using Microsoft.EntityFrameworkCore;
+global using ARCN.Domain.Entities;
+global using Microsoft.OData.ModelBuilder;
+
