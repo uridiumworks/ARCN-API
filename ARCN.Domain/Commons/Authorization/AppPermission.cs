@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ARCN.Domain.Commons.Authorization
 {
-    public record AppPermission(string feature, string action, string group, string description, bool isPatient = false, bool isStaff =false, bool isTech=false, bool isFinance=false, bool isMedical=false, bool isSale=false, bool isDataEntry=false)
+    public record AppPermission(string feature, string action, string group, string description, bool isStaff =false, bool isTech=false, bool isSale=false, bool isDataEntry=false)
     {
         public string Name  => NameFor(feature, action);
 
