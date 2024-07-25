@@ -9,6 +9,9 @@ using ARCN.Repository;
 using ARCN.Repository.Database;
 using Serilog;
 using Microsoft.AspNetCore.Identity;
+using ARCN.Domain.Commons.Authorization;
+using System.Reflection;
+using ARCN.API.Permissions;
 
 namespace ARCN.API.Extensions
 {
@@ -112,6 +115,9 @@ namespace ARCN.API.Extensions
                    .AddEntityFrameworkStores<ARCNDbContext>()
                    .AddDefaultTokenProviders();
 
+                builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+                builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
                 builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
                 builder.Services.AddScoped<IUserprofileService, UserprofileService>();
                 builder.Services.AddScoped<IUserService, UserService>();
@@ -145,34 +151,34 @@ namespace ARCN.API.Extensions
                     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
                     opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    // opt.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+                    //opt.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
                 })
                  .AddJwtBearer(opt =>
                  {
                      opt.TokenValidationParameters = new TokenValidationParameters
                      {
                          ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
-                         // ValidAudience = builder.Configuration["JwtConfig:Audience"],
+                         ValidAudience = builder.Configuration["JwtConfig:Audience"],
                          IssuerSigningKey = new SymmetricSecurityKey
                     (Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Key"])),
                          ValidateIssuer = false,
                          ValidateAudience = false,
                          ValidateLifetime = false,
                          ValidateIssuerSigningKey = false,
-                         //RoleClaimType = ClaimTypes.Role
+                         RoleClaimType = ClaimTypes.Role
                      };
-                 });
+                 }).AddCookie();
 
                 builder.Services.AddAuthorization(options =>
                 {
-                    //foreach (var prop in typeof(AppPermissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
-                    //{
-                    //    var propertyValue = prop.GetValue(null);
-                    //    if (propertyValue is not null)
-                    //    {
-                    //        options.AddPolicy(propertyValue.ToString(), policy => policy.RequireClaim(AppClaim.Permission, propertyValue.ToString()));
-                    //    }
-                    //}
+                    foreach (var prop in typeof(AppPermissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+                    {
+                        var propertyValue = prop.GetValue(null);
+                        if (propertyValue is not null)
+                        {
+                            options.AddPolicy(propertyValue.ToString(), policy => policy.RequireClaim(AppClaim.Permission, propertyValue.ToString()));
+                        }
+                    }
                     var authPolicyBuilder = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme);
                     authPolicyBuilder = authPolicyBuilder.RequireAuthenticatedUser();
                     options.DefaultPolicy = authPolicyBuilder.Build();

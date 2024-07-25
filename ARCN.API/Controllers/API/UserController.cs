@@ -69,14 +69,14 @@ namespace ARCN.API.Controllers.API
         }
 
         [HttpPost("RegisterAdminUser")]
-        //[MustHavePermission(AppFeature.Users, AppAction.Create)]
-        [AllowAnonymous]
+       //[MustHavePermission(AppFeature.Users, AppAction.Create)]
+       [AllowAnonymous]
         public async ValueTask<ActionResult<ApplicationUser>> RegisterAdminUser([FromBody] NewUserDataModel register)
         {
             string requestModel = JsonConvert.SerializeObject(register);
             logger.LogInformation("RegisterAdminUser Request Model {0}", requestModel);
 
-
+ 
             var validatorResult = await registerDataModelValidator.ValidateAsync(register);
             if (!validatorResult.IsValid)
             {
@@ -223,15 +223,15 @@ namespace ARCN.API.Controllers.API
 
         [HttpPost("ResetPassword")]
         [AllowAnonymous]
-        public async Task<ActionResult<ResetPasswordModel>> ResetPassword(ODataActionParameters parameters)
+        public async Task<ActionResult<ResetPasswordModel>> ResetPassword(ResetPasswordModel resetPassword)
         {
-            if (parameters == null || !parameters.TryGetValue("model", out object? modelOutput))
-            {
-                ModelState.AddModelError("model", "model field is required");
-                return ValidationProblem(instance: "100", modelStateDictionary: ModelState);
-            }
+            //if (parameters == null || !parameters.TryGetValue("model", out object? modelOutput))
+            //{
+            //    ModelState.AddModelError("model", "model field is required");
+            //    return ValidationProblem(instance: "100", modelStateDictionary: ModelState);
+            //}
 
-            ResetPasswordModel resetPassword = (ResetPasswordModel)modelOutput;
+            //ResetPasswordModel resetPassword = (ResetPasswordModel)modelOutput;
 
             ValidationResult res = await resetPasswordValidator.ValidateAsync(resetPassword);
             if (!res.IsValid)
@@ -269,15 +269,15 @@ namespace ARCN.API.Controllers.API
 
         [HttpPost("ForgotPassword")]
         [AllowAnonymous]
-        public async Task<ActionResult> ForgotPassword(ODataActionParameters parameters)
+        public async Task<ActionResult> ForgotPassword(ForgotPassword forgotPassword)
         {
-            if (parameters == null || !parameters.TryGetValue("model", out object? modelOutput))
-            {
-                ModelState.AddModelError("model", "model field is required");
-                return ValidationProblem(instance: "100", modelStateDictionary: ModelState);
-            }
+            //if (parameters == null || !parameters.TryGetValue("model", out object? modelOutput))
+            //{
+            //    ModelState.AddModelError("model", "model field is required");
+            //    return ValidationProblem(instance: "100", modelStateDictionary: ModelState);
+            //}
 
-            ForgotPassword forgotPassword = (ForgotPassword)modelOutput;
+            //ForgotPassword forgotPassword = (ForgotPassword)modelOutput;
 
             ValidationResult res = await forgotPasswordValidator.ValidateAsync(forgotPassword);
             if (!res.IsValid)

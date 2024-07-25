@@ -123,7 +123,8 @@ namespace ARCN.Repository.Database
                 NormalizedEmail = AppCredentials.Email.ToUpperInvariant(),
                 NormalizedUserName = adminUserName.ToUpperInvariant(),
                 IsAdmin = true,
-
+                FirstName="System",
+                LastName="System",
             };
 
             if (!await userManager.Users.AnyAsync(u => u.Email == AppCredentials.Email))
