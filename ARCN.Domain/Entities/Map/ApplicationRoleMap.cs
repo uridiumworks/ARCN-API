@@ -11,9 +11,9 @@ namespace ARCN.Domain.Entities.Map
         public void Configure(EntityTypeBuilder<ApplicationRole> builder)
         {
             #region Properties
-            builder.Property(p => p.Description)
-                .HasMaxLength(200)
-                .IsRequired(false);
+            //builder.Property(p => p.Description)
+            //    .HasMaxLength(200)
+            //    .IsRequired(false);
             #endregion
         }
     }

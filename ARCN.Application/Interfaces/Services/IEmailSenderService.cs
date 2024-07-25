@@ -1,13 +1,12 @@
-﻿using System.Threading.Tasks;
-using ARCN.Application.DataModels.EmailData;
+﻿using ARCN.Application.DataModels.UserProfile;
 
-
-namespace ARCN.Application.Interfaces.Services
+namespace ARCN.Application.Interfaces
 {
     public interface IEmailSenderService
     {
-        string SendEMail(EmailDataModel mailRequest);
-        ValueTask<string> SendEmailAsync(EmailDataModel mailRequest, SmtpSettings? customSmtpSettings = null);
+        ValueTask ForgotPasswordMail(ForgotPasswordMail forgotPasswordMail);
+        ValueTask ConfirmEmailAddress(string token, ApplicationUser user);
+
 
     }
 }

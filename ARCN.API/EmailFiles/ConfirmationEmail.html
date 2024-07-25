@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MR3 Account Comfirmation</title>
+</head>
+<style>
+    *,
+    html {
+        padding: 0;
+        margin: 0;
+        box-sizing: content-box;
+        font-family: Open sans;
+    }
+
+    @media (min-width: 600px) {
+        .card__padding {
+            padding: 2rem 5rem;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .card__padding {
+            padding: 2rem 2rem;
+        }
+    }
+</style>
+<body style="padding: 1rem">
+    <header>
+        <div style=" border-radius: 1rem 1rem 0 0; padding: 2rem; background-color: #214cb0; background-image: url(https://res.cloudinary.com/dvvpqxkhw/image/upload/v1697013327/profilepicture/Bg-Img.png.png ); background-size: contain; /* background-repeat: no-repeat; */ background-position: center; ">
+            <table>
+                <tr>
+                    <th style="width: 50%"></th>
+                    <th>
+                        <div style="
+                  border-radius: 0.4rem;
+                  padding: 0.5rem 0.8rem;
+                  background-color: white;
+                ">
+                            <img width="110" src="https://res.cloudinary.com/dvvpqxkhw/image/upload/v1697013233/profilepicture/MR3Logo.png.png
+" alt="MR3Logo" />
+                        </div>
+                    </th>
+                    <th style="width: 50%"></th>
+                </tr>
+            </table>
+        </div>
+    </header>
+    <div style="padding: 2rem 0">
+        <table>
+            <tr>
+                <th style="width: 50%"></th>
+                <th>
+                    <button type="button"
+                            style="
+                text-wrap: nowrap;
+                color: white;
+                background-color: #414352;
+                padding: 0.5rem 2.5rem;
+                border-radius: 0.2rem;
+                border: none;
+                font-size: 1rem;
+              ">
+                        Account Confirmation
+                    </button>
+                </th>
+                <th style="width: 50%"></th>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <p style="font-weight: 500; margin-bottom: 1rem">Hello {{model.Name}},</p>
+        <p style="font-weight: 500; margin-bottom: 1rem">
+            <Datag>DO NOT DISCLOSE!</Datag>
+        </p>
+        <p style="font-weight: 500; margin-bottom: 1rem">
+            Thank you for choosing <b>MR3</b>. To ensure the security of your
+            account and provide you with a seamless experience, we kindly ask you to
+            verify your email address.
+        </p>
+        <p style="font-weight: 500">
+            Please click the button to verify your account.
+        </p>
+        <button type="button"
+                style="
+          text-wrap: nowrap;
+          color: white;
+          background-color: #214cb0;
+          padding: 0.5rem 2rem;
+          border-radius: 0.2rem;
+          border: none;
+          font-size: 1rem;
+          margin: 2rem 0;
+        ">
+            <a href="{{model.Token}}" style="text-decoration:none !important; color:white;">Verify account</a>
+        </button>
+        <p style="font-weight: 500; margin-bottom: 1rem">
+            or click on the
+            <span style="color: #214cb0; font-weight: 600"> <a href="{{model.Token}}">link</a></span>
+        </p>
+        <p style="font-weight: 500; margin-bottom: 1rem; font-weight: 600">
+            PLEASE NOTE!
+        </p>
+
+        <p style="font-weight: 500; margin-bottom: 2rem">
+            If you need assistance, contact our support team via email at or call us
+            at
+            <span style="color: #214cb0; font-weight: 600">support@mr3.digital </span>or call
+            <span style="color: #214cb0; font-weight: 600">0700111222333</span>
+            immediately.
+        </p>
+        <p style="font-weight: 600; margin-bottom: 1rem">
+            Best Regards, <br />
+            MR3
+        </p>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <th style="width: 50%"></th>
+                <th>
+                    <div class="card__padding"
+                         style="
+                background-color: #214cb0;
+                border-radius: 0.3rem;
+                color: white;
+              ">
+                        <p style="font-weight: 500">
+                            Your Medical Records Follow You Everywhere !
+                        </p>
+                        <div style="padding-top: 0">
+                            <table style="width: 100%">
+                                <tr>
+                                    <th style="width: 50%"></th>
+                                    <th style="padding: 1rem 0.2rem 0 0.2rem">
+                                        <img width="100"
+                                             src="https://res.cloudinary.com/dvvpqxkhw/image/upload/v1697013024/profilepicture/Apple.png.png
+"
+                                             alt="DownloadApp" />
+                                    </th>
+                                    <th style="padding: 1rem 0.2rem 0 0.2rem">
+                                        <img width="100"
+                                             src="https://res.cloudinary.com/dvvpqxkhw/image/upload/v1697013079/profilepicture/Android.png.png
+"
+                                             alt="DownloadApp" />
+                                    </th>
+                                    <th style="width: 50%"></th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </th>
+                <th style="width: 50%"></th>
+            </tr>
+        </table>
+    </div>
+    <div style="padding: 2rem 0">
+        <p style="font-size: 0.8rem; color: #a0a0a0; text-align: center">
+            Please send any feedback or bug reports to
+            <span style="color: #214cb0; font-weight: 600">support@mr3.digital</span>
+        </p>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <th style="width: 50%"></th>
+                <th>
+                    <table>
+                        <tr>
+                            <th style="padding: 0 1rem; text-align: center">
+                                <img style="
+                      background-color: #eaeaea;
+                      border-radius: 50%;
+                      padding: 0.4rem;
+                    "
+                                     width="20"
+                                     src="https://res.cloudinary.com/dvvpqxkhw/image/upload/v1697012653/profilepicture/TwitterX.png.png
+"
+                                     alt="MR3Logo" />
+                            </th>
+                            <th style="padding: 0 1rem">
+                                <img style="
+                      background-color: #eaeaea;
+                      border-radius: 50%;
+                      padding: 0.4rem;
+                    "
+                                     width="20"
+                                     src="https://res.cloudinary.com/dvvpqxkhw/image/upload/v1697012728/profilepicture/FacebookIcon.png.png
+"
+                                     alt="MR3Logo" />
+                            </th>
+                            <th style="padding: 0 1rem">
+                                <img style="
+                      background-color: #eaeaea;
+                      border-radius: 50%;
+                      padding: 0.4rem;
+                    "
+                                     width="20"
+                                     src="https://res.cloudinary.com/dvvpqxkhw/image/upload/v1697012792/profilepicture/InstagramIcon.png.png
+"
+                                     alt="MR3Logo" />
+                            </th>
+                        </tr>
+                    </table>
+                </th>
+                <th style="width: 50%"></th>
+            </tr>
+        </table>
+    </div>
+    <div style="padding: 1rem 0">
+        <p style="font-size: 0.8rem; color: #a0a0a0; text-align: center">
+            Copyright 2023, MR3 Patient. All Rights Reserved.
+        </p>
+    </div>
+</body>
+</html>

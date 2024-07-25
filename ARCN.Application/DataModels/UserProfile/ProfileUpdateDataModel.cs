@@ -14,9 +14,5 @@ namespace ARCN.Application.DataModels.UserProfile
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string? UserName { get; set; }
-        public string DateOfBirth { get; set; }
-        public string? ProfileImageUrl { get; set; }
-        public int? StateId { get; set; }
-        public string? PermarmentAddress { get; set; }
     }
 }

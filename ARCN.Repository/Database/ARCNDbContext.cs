@@ -5,7 +5,7 @@
 
 namespace ARCN.Repository.Database
 {
-    public class ARCNDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, IdentityUserClaim<string>, IdentityUserRole<string>, IdentityUserLogin<string>, ApplicationRoleClaim, IdentityUserToken<string>>, IUnitOfWork
+    public class ARCNDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string, IdentityUserClaim<string>, IdentityUserRole<string>, IdentityUserLogin<string>, ApplicationRoleClaim, IdentityUserToken<string>>, IUnitOfWork
     {
         public ARCNDbContext(DbContextOptions<ARCNDbContext> options): base(options)
         {
@@ -24,7 +24,7 @@ namespace ARCN.Repository.Database
                 entity.ToTable(name: "tbl_UsersProfile");
             });
 
-            modelBuilder.Entity<ApplicationRole>(entity =>
+            modelBuilder.Entity<IdentityRole>(entity =>
             {
                 entity.ToTable(name: "tbl_Roles");
             });

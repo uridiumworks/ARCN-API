@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <Compile Remove="EfCoreInterceptors\AuditLogInterceptor.cs" />
+    <Compile Remove="Repositories\SecurityQuestionAnswerRepository.cs" />
+    <Compile Remove="Repositories\SecurityQuestionRepository.cs" />
   </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />

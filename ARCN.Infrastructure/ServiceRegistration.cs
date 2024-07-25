@@ -1,4 +1,7 @@
 ﻿
+using ARCN.Application.Interfaces;
+using ARCN.Application.Interfaces.Services;
+using ARCN.Infrastructure.Services.ApplicationServices;
 using ARCN.Infrastructure.Services.RefitServices;
 
 namespace ARCN.Infrastructure
@@ -16,7 +19,7 @@ namespace ARCN.Infrastructure
             services.AddMemoryCache();
             services.AddSingleton<FluidParser>();
             services.AddScoped<MailMessage>();
-           
+
             return services;
         }
     }
