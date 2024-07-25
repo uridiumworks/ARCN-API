@@ -1,9 +1,14 @@
 ﻿
 using ARCN.API.EntityDataModels;
 using ARCN.Application;
+using ARCN.Application.Interfaces.Services;
+using ARCN.Application.Interfaces;
 using ARCN.Infrastructure;
+using ARCN.Infrastructure.Services.ApplicationServices;
 using ARCN.Repository;
+using ARCN.Repository.Database;
 using Serilog;
+using Microsoft.AspNetCore.Identity;
 
 namespace ARCN.API.Extensions
 {
@@ -103,12 +108,25 @@ namespace ARCN.API.Extensions
 
 
                 #region Other service Registration
+                builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                   .AddEntityFrameworkStores<ARCNDbContext>()
+                   .AddDefaultTokenProviders();
+
+                builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
+                builder.Services.AddScoped<IUserprofileService, UserprofileService>();
+                builder.Services.AddScoped<IUserService, UserService>();
+                builder.Services.AddScoped<ICloudinaryFileUploadService, CloudinaryFileUploadService>();
+                builder.Services.AddScoped<ITokenService, TokenService>();
+                builder.Services.AddScoped<IUserIdentityService, UserIdentityService>();
+                builder.Services.AddScoped<IStaffRegistrationService, StaffRegistrationService>();
+
                 builder.Services.AddInfrastructureServices(builder.Configuration);
                 builder.Services.AddApplicationServices();
                 builder.Services.AddRepositoryServices(builder.Configuration);
                 builder.Services.AddRepositories();
                 builder.Services.AddDistributedMemoryCache();
 
+   
 
                 #endregion
 
@@ -194,6 +212,18 @@ namespace ARCN.API.Extensions
             app.MapControllers().RequireAuthorization();
 
 
+            return app;
+        }
+        internal static IApplicationBuilder SeedDatabase(this IApplicationBuilder app)
+        {
+            using var serviceScope = app.ApplicationServices.CreateScope();
+
+            var seeders = serviceScope.ServiceProvider.GetServices<ARCNDbSeeder>();
+
+            foreach (var seed in seeders)
+            {
+                seed.SeedDatabaseAsync().GetAwaiter().GetResult();
+            }
             return app;
         }
     }

@@ -8,13 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\Customer\**" />
-    <Compile Remove="Controllers\ODATA\**" />
     <Content Remove="Controllers\Customer\**" />
-    <Content Remove="Controllers\ODATA\**" />
     <EmbeddedResource Remove="Controllers\Customer\**" />
-    <EmbeddedResource Remove="Controllers\ODATA\**" />
     <None Remove="Controllers\Customer\**" />
-    <None Remove="Controllers\ODATA\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\API\UserProfileController.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />

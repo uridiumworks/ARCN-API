@@ -1,6 +1,7 @@
 
 using ARCN.API.EnvHandler;
 using ARCN.API.Extensions;
+using ARCN.API.Extensions;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
@@ -40,7 +41,7 @@ try
     .ConfigureServices()
     .ConfigurePipeline();
 
-    // app.SeedDatabase();
+    app.SeedDatabase();
 
 
     app.Run();
