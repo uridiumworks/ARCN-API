@@ -96,8 +96,11 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         {
             var registeredModel = new UserResponseDataModel
             {
+                FirstName=user.FirstName,
+                LastName=user.LastName,
                 PhoneNumber = user.PhoneNumber,
                 Email = user.Email,
+                UserName=user.UserName,
                 Token = await tokenService.CreateTokenAsync(user)
 
             };
