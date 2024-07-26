@@ -11,6 +11,7 @@ using Errors = ARCN.Application.Exceptions;
 namespace ARCN.API.Controllers.API
 {
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class RoleController:ODataController
     {
         private readonly UserManager<ApplicationUser> userManager;

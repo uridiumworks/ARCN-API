@@ -20,8 +20,8 @@ using ARCN.API.Atrributes;
 
 namespace ARCN.API.Controllers.API
 {
-    // [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class UserController : ODataController
     {
         private readonly UserManager<ApplicationUser> userManager;

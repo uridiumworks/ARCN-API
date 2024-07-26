@@ -11,6 +11,7 @@ namespace ARCN.API.Controllers.ODATA
     /// User Profile Controller
     /// </summary>
     [Route("odata")]
+    [AllowAnonymous]
     public class UserController : ODataController
     {
         private readonly IUserprofileService userprofileService;
