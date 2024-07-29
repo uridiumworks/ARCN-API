@@ -1,4 +1,5 @@
-﻿using ARCN.Application.DataModels.Identity;
+﻿using ARCN.Application.DataModels.ContentManagement;
+using ARCN.Application.DataModels.Identity;
 using ARCN.Application.Interfaces.Services;
 using ARCN.Infrastructure.Services.ApplicationServices;
 using Microsoft.AspNetCore.Http;
@@ -21,13 +22,13 @@ namespace ARCN.API.Controllers.API
             this.logger = logger;
         }
         [HttpPost("CreateReports")]
-        public async ValueTask<ActionResult<Reports>> Post([FromBody] Reports model)
+        public async ValueTask<ActionResult<Reports>> Post([FromBody] Reports model,CancellationToken cancellationToken)
         {
 
-            var result=await reportsService.AddReportsAsync(model);
+            var result=await reportsService.AddReportsAsync(model, cancellationToken);
             if (result.Success)
             {
-                return Ok();
+                return Ok(result);
 
             }
             else
@@ -38,12 +39,12 @@ namespace ARCN.API.Controllers.API
         }
 
         [HttpPut("UpdateReports/{key}")]
-        public async ValueTask<ActionResult<Reports>> Put(int key, [FromBody] Reports Reports)
+        public async ValueTask<ActionResult<Reports>> Put(int key, [FromBody] ReportsDataModel Reports)
         {
             var result = await reportsService.UpdateReportsAsync(key,Reports);
             if (result.Success)
             {
-                return Ok();
+                return Ok(result);
 
             }
             else

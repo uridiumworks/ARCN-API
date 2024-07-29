@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ARCN.Application.DataModels.ContentManagement;
 using ARCN.Application.DataModels.UserProfile;
 using ARCN.Application.Interfaces;
 using ARCN.Application.Interfaces.Repositories;
@@ -20,47 +21,50 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         private readonly IUserProfileRepository userProfileRepository;
         private readonly IUserprofileService userprofileService;
         private readonly IUserIdentityService userIdentityService;
+        private readonly IMapper mapper;
 
         public ReportsService(
             IReportsRepository reportsRepository,
             IUnitOfWork unitOfWork,
             IUserProfileRepository userProfileRepository,
             IUserprofileService userprofileService,
-            IUserIdentityService userIdentityService) {
+            IUserIdentityService userIdentityService,IMapper mapper) {
             this.reportsRepository = reportsRepository;
             this.unitOfWork = unitOfWork;
             this.userProfileRepository = userProfileRepository;
             this.userprofileService = userprofileService;
             this.userIdentityService = userIdentityService;
+            this.mapper = mapper;
         }
-        public async ValueTask<ResponseModel<string>> AddReportsAsync(Reports model)
+        public async ValueTask<ResponseModel<Reports>> AddReportsAsync(Reports model,CancellationToken cancellationToken)
         {
             try
             {
 
-            var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-            if (user == null)
-            {
-                return new ResponseModel<string>
-                {
-                    Success = false,
-                    Message = "User not found",
-                };
-            }
+            //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+            //if (user == null)
+            //{
+            //    return new ResponseModel<Reports>
+            //    {
+            //        Success = false,
+            //        Message = "User not found",
+            //    };
+            //}
 
-                unitOfWork.Add(model);
+               var result= await reportsRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
-                return new ResponseModel<string>
+                return new ResponseModel<Reports>
                 {
                     Success = true,
                     Message = "Update request successfully submitted",
+                    Data = result
                 };
 
             }
             catch (Exception ex)
             {
 
-                return new ResponseModel<string>
+                return new ResponseModel<Reports>
                 {
                     Success = false,
                     Message = "Fail to insert",
@@ -85,26 +89,27 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
             return ResponseModel<Reports>.SuccessMessage(data: Reportss);
         }
-        public async ValueTask<ResponseModel<string>> UpdateReportsAsync(int Reportsid, Reports model)
+        public async ValueTask<ResponseModel<Reports>> UpdateReportsAsync(int Reportsid, ReportsDataModel model)
         {
             try
             {
 
-                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-                if (user == null)
-                {
-                    return new ResponseModel<string>
-                    {
-                        Success = false,
-                        Message = "User not found",
-                    };
-                }
+                //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                //if (user == null)
+                //{
+                //    return new ResponseModel<Reports>
+                //    {
+                //        Success = false,
+                //        Message = "User not found",
+                //    };
+                //}
                 var Reportss = await reportsRepository.FindByIdAsync(Reportsid);
                 if (Reportss != null)
                 {
-                    unitOfWork.Update(model);
+                    mapper.Map(model, Reportss);
+                  var result=  reportsRepository.Update(Reportss);
                     unitOfWork.SaveChanges();
-                    return new ResponseModel<string>
+                    return new ResponseModel<Reports>
                     {
                         Success = true,
                         Message = "Update request successfully submitted",
@@ -112,7 +117,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 }
                 else
                 {
-                    return new ResponseModel<string>
+                    return new ResponseModel<Reports>
                     {
                         Success = false,
                         Message = "Update Failed",
@@ -122,7 +127,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             catch (Exception ex)
             {
 
-                return new ResponseModel<string>
+                return new ResponseModel<Reports>
                 {
                     Success = false,
                     Message = "Fail to insert",

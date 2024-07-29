@@ -21,13 +21,13 @@ namespace ARCN.API.Controllers.API
             this.logger = logger;
         }
         [HttpPost("CreateBlog")]
-        public async ValueTask<ActionResult<Blog>> Post([FromBody] Blog model)
+        public async ValueTask<ActionResult<Blog>> Post([FromBody] Blog model,CancellationToken cancellationToken)
         {
 
-            var result=await blogService.AddBlogAsync(model);
+            var result=await blogService.AddBlogAsync(model, cancellationToken);
             if (result.Success)
             {
-                return Ok();
+                return Ok(result);
 
             }
             else
@@ -38,12 +38,12 @@ namespace ARCN.API.Controllers.API
         }
 
         [HttpPut("UpdateBlog/{key}")]
-        public async ValueTask<ActionResult<Blog>> Put(int key, [FromBody] Blog blog)
+        public async ValueTask<ActionResult<Blog>> Put(int key, [FromBody] BlogDataModel blog)
         {
             var result = await blogService.UpdateBlogAsync(key,blog);
             if (result.Success)
             {
-                return Ok();
+                return Ok(result);
 
             }
             else

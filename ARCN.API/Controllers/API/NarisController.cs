@@ -1,4 +1,5 @@
-﻿using ARCN.Application.DataModels.Identity;
+﻿using ARCN.Application.DataModels.ContentManagement;
+using ARCN.Application.DataModels.Identity;
 using ARCN.Application.Interfaces.Services;
 using ARCN.Infrastructure.Services.ApplicationServices;
 using Microsoft.AspNetCore.Http;
@@ -21,13 +22,13 @@ namespace ARCN.API.Controllers.API
             this.logger = logger;
         }
         [HttpPost("CreateNaris")]
-        public async ValueTask<ActionResult<Naris>> Post([FromBody] Naris model)
+        public async ValueTask<ActionResult<Naris>> Post([FromBody] Naris model,CancellationToken cancellationToken)
         {
 
-            var result=await narisService.AddNarisAsync(model);
+            var result=await narisService.AddNarisAsync(model, cancellationToken);
             if (result.Success)
             {
-                return Ok();
+                return Ok(result);
 
             }
             else
@@ -38,12 +39,12 @@ namespace ARCN.API.Controllers.API
         }
 
         [HttpPut("UpdateNaris/{key}")]
-        public async ValueTask<ActionResult<Naris>> Put(int key, [FromBody] Naris Naris)
+        public async ValueTask<ActionResult<Naris>> Put(int key, [FromBody] NarisDataModel Naris)
         {
             var result = await narisService.UpdateNarisAsync(key,Naris);
             if (result.Success)
             {
-                return Ok();
+                return Ok(result);
 
             }
             else

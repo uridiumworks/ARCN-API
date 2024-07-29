@@ -1,6 +1,8 @@
 ﻿using ARCN.Application.DataModels.Identity;
+using ARCN.Application.Interfaces.Repositories;
 using ARCN.Application.Interfaces.Services;
 using ARCN.Infrastructure.Services.ApplicationServices;
+using ARCN.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,27 +17,23 @@ namespace ARCN.API.Controllers.ODATA
     {
         private readonly ICordinationReportService cordinationReportService;
         private readonly ILogger<CordinationReportController> logger;
+        private readonly ICordinationReportRepository cordinationReportRepository;
 
-        public CordinationReportController(ICordinationReportService cordinationReportService, ILogger<CordinationReportController> logger)
+        public CordinationReportController(ICordinationReportService cordinationReportService, ILogger<CordinationReportController> logger
+            ,ICordinationReportRepository cordinationReportRepository)
         {
             this.cordinationReportService = cordinationReportService;
             this.logger = logger;
+            this.cordinationReportRepository = cordinationReportRepository;
         }
         [HttpGet("GetAllCordinationReport")]
         [EnableQuery]
         public async ValueTask<ActionResult<CordinationReport>> GetAllCordinationReport()
         {
 
-            var result = await cordinationReportService.GetAllCordinationReport();
-            if (result.Success)
-            {
-                return Ok();
+            var result = cordinationReportRepository.FindAll();
+            return Ok(result);
 
-            }
-            else
-            {
-                return BadRequest();
-            }
 
         }
 
@@ -43,16 +41,8 @@ namespace ARCN.API.Controllers.ODATA
         [EnableQuery]
         public async ValueTask<ActionResult<CordinationReport>> GetCordinationReportById(int key)
         {
-            var result = await cordinationReportService.GetCordinationReportById(key);
-            if (result.Success)
-            {
-                return Ok();
-
-            }
-            else
-            {
-                return BadRequest();
-            }
+            var result = await cordinationReportRepository.FindByIdAsync(key);
+           return Ok(result);
         }
 
     }

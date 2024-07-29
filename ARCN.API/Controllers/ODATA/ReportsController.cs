@@ -1,4 +1,5 @@
 ﻿using ARCN.Application.DataModels.Identity;
+using ARCN.Application.Interfaces.Repositories;
 using ARCN.Application.Interfaces.Services;
 using ARCN.Infrastructure.Services.ApplicationServices;
 using Microsoft.AspNetCore.Http;
@@ -15,27 +16,21 @@ namespace ARCN.API.Controllers.ODATA
     {
         private readonly IReportsService reportsService;
         private readonly ILogger<ReportsController> logger;
+        private readonly IReportsRepository reportsRepository;
 
-        public ReportsController(IReportsService reportsService, ILogger<ReportsController> logger)
+        public ReportsController(IReportsService reportsService, ILogger<ReportsController> logger,IReportsRepository reportsRepository)
         {
             this.reportsService = reportsService;
             this.logger = logger;
+            this.reportsRepository = reportsRepository;
         }
         [HttpGet("GetAllReports")]
         [EnableQuery]
         public async ValueTask<ActionResult<Reports>> GetAllReports()
         {
 
-            var result = await reportsService.GetAllReports();
-            if (result.Success)
-            {
+            var result =  reportsRepository.FindAll();
                 return Ok();
-
-            }
-            else
-            {
-                return BadRequest();
-            }
 
         }
 
@@ -43,16 +38,10 @@ namespace ARCN.API.Controllers.ODATA
         [EnableQuery]
         public async ValueTask<ActionResult<Reports>> GetReportsById(int key)
         {
-            var result = await reportsService.GetReportsById(key);
-            if (result.Success)
-            {
-                return Ok();
+            var result = await reportsRepository.FindByIdAsync(key);
+  
+                return Ok(result);
 
-            }
-            else
-            {
-                return BadRequest();
-            }
         }
 
     }

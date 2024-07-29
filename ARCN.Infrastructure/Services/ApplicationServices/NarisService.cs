@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ARCN.Application.DataModels.ContentManagement;
 using ARCN.Application.DataModels.UserProfile;
 using ARCN.Application.Interfaces;
 using ARCN.Application.Interfaces.Repositories;
@@ -19,47 +20,50 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         private readonly IUserProfileRepository userProfileRepository;
         private readonly IUserprofileService userprofileService;
         private readonly IUserIdentityService userIdentityService;
+        private readonly IMapper mapper;
 
         public NarisService(
             INarisRepository narisRepository,
             IUnitOfWork unitOfWork,
             IUserProfileRepository userProfileRepository,
             IUserprofileService userprofileService,
-            IUserIdentityService userIdentityService) {
+            IUserIdentityService userIdentityService,IMapper mapper) {
             this.narisRepository = narisRepository;
             this.unitOfWork = unitOfWork;
             this.userProfileRepository = userProfileRepository;
             this.userprofileService = userprofileService;
             this.userIdentityService = userIdentityService;
+            this.mapper = mapper;
         }
-        public async ValueTask<ResponseModel<string>> AddNarisAsync(Naris model)
+        public async ValueTask<ResponseModel<Naris>> AddNarisAsync(Naris model,CancellationToken cancellationToken)
         {
             try
             {
 
-            var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-            if (user == null)
-            {
-                return new ResponseModel<string>
-                {
-                    Success = false,
-                    Message = "User not found",
-                };
-            }
+            //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+            //if (user == null)
+            //{
+            //    return new ResponseModel<Naris>
+            //    {
+            //        Success = false,
+            //        Message = "User not found",
+            //    };
+            //}
 
-                unitOfWork.Add(model);
+              var result= await  narisRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
-                return new ResponseModel<string>
+                return new ResponseModel<Naris>
                 {
                     Success = true,
-                    Message = "Update request successfully submitted",
+                    Message = "successfully created",
+                    Data= result
                 };
 
             }
             catch (Exception ex)
             {
 
-                return new ResponseModel<string>
+                return new ResponseModel<Naris>
                 {
                     Success = false,
                     Message = "Fail to insert",
@@ -84,34 +88,36 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
             return ResponseModel<Naris>.SuccessMessage(data: Nariss);
         }
-        public async ValueTask<ResponseModel<string>> UpdateNarisAsync(int Narisid, Naris model)
+        public async ValueTask<ResponseModel<Naris>> UpdateNarisAsync(int Narisid, NarisDataModel model)
         {
             try
             {
 
-                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-                if (user == null)
-                {
-                    return new ResponseModel<string>
-                    {
-                        Success = false,
-                        Message = "User not found",
-                    };
-                }
+                //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                //if (user == null)
+                //{
+                //    return new ResponseModel<Naris>
+                //    {
+                //        Success = false,
+                //        Message = "User not found",
+                //    };
+                //}
                 var Nariss = await narisRepository.FindByIdAsync(Narisid);
                 if (Nariss != null)
                 {
-                    unitOfWork.Update(model);
+                    mapper.Map(model, Nariss);
+                 var result=  narisRepository.Update(Nariss);
                     unitOfWork.SaveChanges();
-                    return new ResponseModel<string>
+                    return new ResponseModel<Naris>
                     {
                         Success = true,
-                        Message = "Update request successfully submitted",
+                        Message = "Update successfully",
+                        Data = result
                     };
                 }
                 else
                 {
-                    return new ResponseModel<string>
+                    return new ResponseModel<Naris>
                     {
                         Success = false,
                         Message = "Update Failed",
@@ -121,10 +127,10 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             catch (Exception ex)
             {
 
-                return new ResponseModel<string>
+                return new ResponseModel<Naris>
                 {
                     Success = false,
-                    Message = "Fail to insert",
+                    Message = "Fail to Update",
                 };
             }
         }

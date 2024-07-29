@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ARCN.Application.DataModels.ContentManagement;
 using ARCN.Application.DataModels.UserProfile;
 using ARCN.Application.Interfaces;
 using ARCN.Application.Interfaces.Repositories;
@@ -19,47 +20,50 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         private readonly IUserProfileRepository userProfileRepository;
         private readonly IUserprofileService userprofileService;
         private readonly IUserIdentityService userIdentityService;
+        private readonly IMapper mapper;
 
         public JournalService(
             IJournalRepository journalRepository,
             IUnitOfWork unitOfWork,
             IUserProfileRepository userProfileRepository,
             IUserprofileService userprofileService,
-            IUserIdentityService userIdentityService) {
+            IUserIdentityService userIdentityService,IMapper mapper) {
             this.journalRepository = journalRepository;
             this.unitOfWork = unitOfWork;
             this.userProfileRepository = userProfileRepository;
             this.userprofileService = userprofileService;
             this.userIdentityService = userIdentityService;
+            this.mapper = mapper;
         }
-        public async ValueTask<ResponseModel<string>> AddJournalsAsync(Journals model)
+        public async ValueTask<ResponseModel<Journals>> AddJournalsAsync(Journals model,CancellationToken cancellationToken)
         {
             try
             {
 
-            var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-            if (user == null)
-            {
-                return new ResponseModel<string>
-                {
-                    Success = false,
-                    Message = "User not found",
-                };
-            }
+            //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+            //if (user == null)
+            //{
+            //    return new ResponseModel<string>
+            //    {
+            //        Success = false,
+            //        Message = "User not found",
+            //    };
+            //}
 
-                unitOfWork.Add(model);
+               var result= await journalRepository.AddAsync(model, cancellationToken);
                 unitOfWork.SaveChanges();
-                return new ResponseModel<string>
+                return new ResponseModel<Journals>
                 {
                     Success = true,
-                    Message = "Update request successfully submitted",
+                    Message = "successfully submitted",
+                    Data= result
                 };
 
             }
             catch (Exception ex)
             {
 
-                return new ResponseModel<string>
+                return new ResponseModel<Journals>
                 {
                     Success = false,
                     Message = "Fail to insert",
@@ -84,34 +88,36 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
             return ResponseModel<Journals>.SuccessMessage(data: Journalss);
         }
-        public async ValueTask<ResponseModel<string>> UpdateJournalsAsync(int Journalsid, Journals model)
+        public async ValueTask<ResponseModel<Journals>> UpdateJournalsAsync(int Journalsid, JournalsDataModel model)
         {
             try
             {
 
-                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-                if (user == null)
-                {
-                    return new ResponseModel<string>
-                    {
-                        Success = false,
-                        Message = "User not found",
-                    };
-                }
+                //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                //if (user == null)
+                //{
+                //    return new ResponseModel<Journals>
+                //    {
+                //        Success = false,
+                //        Message = "User not found",
+                //    };
+                //}
                 var Journalss = await journalRepository.FindByIdAsync(Journalsid);
                 if (Journalss != null)
                 {
-                    unitOfWork.Update(model);
+                    mapper.Map(model, Journalss);
+                  var result=  journalRepository.Update(Journalss);
                     unitOfWork.SaveChanges();
-                    return new ResponseModel<string>
+                    return new ResponseModel<Journals>
                     {
                         Success = true,
-                        Message = "Update request successfully submitted",
+                        Message = "Update successfully submitted",
+                        Data=result
                     };
                 }
                 else
                 {
-                    return new ResponseModel<string>
+                    return new ResponseModel<Journals>
                     {
                         Success = false,
                         Message = "Update Failed",
@@ -121,7 +127,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             catch (Exception ex)
             {
 
-                return new ResponseModel<string>
+                return new ResponseModel<Journals>
                 {
                     Success = false,
                     Message = "Fail to insert",
