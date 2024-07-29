@@ -21,7 +21,7 @@ using ARCN.API.Atrributes;
 namespace ARCN.API.Controllers.API
 {
     [Route("api/[controller]")]
-    [AllowAnonymous]
+    //[AllowAnonymous]
     public class UserController : ODataController
     {
         private readonly UserManager<ApplicationUser> userManager;
@@ -69,8 +69,8 @@ namespace ARCN.API.Controllers.API
         }
 
         [HttpPost("RegisterAdminUser")]
-       //[MustHavePermission(AppFeature.Users, AppAction.Create)]
-       [AllowAnonymous]
+        [MustHavePermission(AppFeature.Users, AppAction.Create)]
+      // [AllowAnonymous]
         public async ValueTask<ActionResult<ApplicationUser>> RegisterAdminUser([FromBody] NewUserDataModel register)
         {
             string requestModel = JsonConvert.SerializeObject(register);

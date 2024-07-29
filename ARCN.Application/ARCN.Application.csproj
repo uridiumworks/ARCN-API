@@ -24,6 +24,7 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="AutoMaps\" />
+	  <Folder Include="DataModels\ContentManagement\" />
 	  <Folder Include="Helper\Constants\" />
 	</ItemGroup>
 

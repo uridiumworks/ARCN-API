@@ -51,7 +51,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
         public async ValueTask<ResponseModel<ApplicationUser>> GetProfile()
         {
-            var profile = await userProfileRepository.FindByIdAsync(userIdentityService.UserProfileId);
+            var profile = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
 
             if (profile == null) return new ResponseModel<ApplicationUser> { Message = "Profile not found", Success = false, Data = null, Errors = new List<string> { "Profile not found" } };
 
@@ -59,7 +59,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         }
         public async ValueTask<ApplicationUser> GetUserProfile()
         {
-            var profile = await userProfileRepository.FindAll().Where(x => x.Id == userIdentityService.UserProfileId)
+            var profile = await userProfileRepository.FindAll().Where(x => x.Id == userIdentityService.UserId)
                 .FirstOrDefaultAsync();
             return profile;
         }

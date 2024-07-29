@@ -12,8 +12,6 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         }
         public string UserName => GetUserName();
 
-        public string? UserProfileId => GetUserProfileId();
-        public string? AccountNumber => GetUserAccountNumber();
 
         public string? UserId => GetSubjectId();
 
@@ -49,24 +47,6 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             return claim.Value;
         }
 
-        private string GetUserProfileId()
-        {
-            var identity = httpContextAccessor?.HttpContext?.User?.Identity;
-            var id = identity as ClaimsIdentity;
-            var claim = id?.FindFirst("profileId");
-
-            if (claim == null) throw new InvalidOperationException("UserProfileId claim is missing");
-            return claim.Value;
-        }
-
-        private string GetUserAccountNumber()
-        {
-            var identity = httpContextAccessor?.HttpContext?.User?.Identity;
-            var id = identity as ClaimsIdentity;
-            var claim = id?.FindFirst("acctNumber");
-
-            if (claim == null) throw new InvalidOperationException("AccountNumber claim is missing");
-            return claim.Value;
-        }
+      
     }
 }

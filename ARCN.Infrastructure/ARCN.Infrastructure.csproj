@@ -5,6 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Services\ApplicationServices\ContentManagementService.cs" />
+  </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="CloudinaryDotNet" Version="1.26.2" />
 		<PackageReference Include="Fluid.Core" Version="2.10.0" />
