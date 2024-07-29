@@ -1,17 +1,21 @@
-﻿
-using ARCN.API.EntityDataModels;
+﻿using ARCN.API.EntityDataModels;
 using ARCN.Application;
 using ARCN.Application.Interfaces.Services;
-using ARCN.Application.Interfaces;
 using ARCN.Infrastructure;
 using ARCN.Infrastructure.Services.ApplicationServices;
 using ARCN.Repository;
 using ARCN.Repository.Database;
-using Serilog;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using ARCN.Domain.Commons.Authorization;
 using System.Reflection;
 using ARCN.API.Permissions;
+using ARCN.Application.Interfaces;
+using Serilog;
 
 namespace ARCN.API.Extensions
 {
@@ -26,13 +30,11 @@ namespace ARCN.API.Extensions
                 {
                     opt.AddPolicy(name: "allowAllOrigins", policy =>
                     {
-                        policy
-                        .AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        policy.AllowAnyOrigin()
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
                     });
                 });
-
                 #endregion
 
                 #region OdataConfig
@@ -42,57 +44,52 @@ namespace ARCN.API.Extensions
 
                 IEdmModel edmModel = new ARCNEntityDataModel().GetEntityDataModel();
                 builder.Services.AddControllers()
-                     .AddOData(opt =>
-                    opt
-                    .AddRouteComponents("customer/odata", edmModel, batchHandler)
-                    .Select()
-                    .Expand()
-                    .OrderBy()
-                    .SetMaxTop(100)
-                    .Count()
-                    .Filter()).AddJsonOptions(x =>
-                    {
-                        x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-                        x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                    });
-
+                     .AddOData(opt => opt.AddRouteComponents("customer/odata", edmModel, batchHandler)
+                     .Select()
+                     .Expand()
+                     .OrderBy()
+                     .SetMaxTop(100)
+                     .Count()
+                     .Filter())
+                     .AddJsonOptions(x =>
+                     {
+                         x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                         x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                     });
                 #endregion
 
                 #region Swagger
-                // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
                 builder.Services.AddEndpointsApiExplorer();
-                builder.Services.AddSwaggerGen(c => c.ResolveConflictingActions(apides => apides.First()));
+                builder.Services.AddSwaggerGen(c => c.ResolveConflictingActions(apiDes => apiDes.First()));
                 builder.Services.AddSwaggerGen(c =>
                 {
-                    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                     {
                         Name = "Authorization",
-                        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-                        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+                        In = ParameterLocation.Header,
+                        Type = SecuritySchemeType.ApiKey,
                         Scheme = "Bearer",
                         BearerFormat = "JWT",
                         Description = "Input your Bearer Token in this format - Bearer {your token} to access the api"
-
                     });
 
-                    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-                {
+                    c.AddSecurityRequirement(new OpenApiSecurityRequirement
                     {
-                        new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference
+                            new OpenApiSecurityScheme
                             {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer",
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer",
+                                },
+                                Scheme = "Bearer",
+                                Name = "Bearer",
+                                In = ParameterLocation.Header,
                             },
-                            Scheme = "Bearer",
-                            Name = "Bearer",
-                            In = ParameterLocation.Header,
-
-                        }, new List<string>()
-                    }
-
-                });
+                            new List<string>()
+                        }
+                    });
 
                     c.SwaggerDoc("v1", new OpenApiInfo
                     {
@@ -104,40 +101,29 @@ namespace ARCN.API.Extensions
                             Url = new Uri("https://opensource.org/licenses/MIT")
                         }
                     });
-                
-
                 });
                 #endregion
 
-
-                #region Other service Registration
+                #region Identity and Services Registration
                 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                    .AddEntityFrameworkStores<ARCNDbContext>()
-                   .AddDefaultTokenProviders();
+                   .AddDefaultTokenProviders()
+                   .AddRoles<IdentityRole>()
+                   .AddSignInManager<SignInManager<ApplicationUser>>();
 
                 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
                 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
-                builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
-                builder.Services.AddScoped<IUserprofileService, UserprofileService>();
-                builder.Services.AddScoped<IUserService, UserService>();
-                builder.Services.AddScoped<ICloudinaryFileUploadService, CloudinaryFileUploadService>();
-                builder.Services.AddScoped<ITokenService, TokenService>();
-                builder.Services.AddScoped<IUserIdentityService, UserIdentityService>();
-                builder.Services.AddScoped<IStaffRegistrationService, StaffRegistrationService>();
+             
 
                 builder.Services.AddInfrastructureServices(builder.Configuration);
                 builder.Services.AddApplicationServices();
                 builder.Services.AddRepositoryServices(builder.Configuration);
                 builder.Services.AddRepositories();
                 builder.Services.AddDistributedMemoryCache();
-
-   
-
                 #endregion
 
-                #region Authentication and Authorization scheme
-
+                #region Authentication and Authorization
                 builder.Services.AddSession(options =>
                 {
                     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -145,29 +131,26 @@ namespace ARCN.API.Extensions
                     options.Cookie.IsEssential = true;
                 });
 
-                builder.Services.AddAuthentication(opt =>
+                // Simplified and focused on JWT Bearer tokens
+                builder.Services.AddAuthentication(options =>
                 {
-                    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-                    opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    //opt.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                 .AddJwtBearer(opt =>
-                 {
-                     opt.TokenValidationParameters = new TokenValidationParameters
-                     {
-                         ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
-                         ValidAudience = builder.Configuration["JwtConfig:Audience"],
-                         IssuerSigningKey = new SymmetricSecurityKey
-                    (Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Key"])),
-                         ValidateIssuer = false,
-                         ValidateAudience = false,
-                         ValidateLifetime = false,
-                         ValidateIssuerSigningKey = false,
-                         RoleClaimType = ClaimTypes.Role
-                     };
-                 }).AddCookie();
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
+                        ValidAudience = builder.Configuration["JwtConfig:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Key"])),
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        RoleClaimType = ClaimTypes.Role
+                    };
+                });
 
                 builder.Services.AddAuthorization(options =>
                 {
@@ -183,24 +166,21 @@ namespace ARCN.API.Extensions
                     authPolicyBuilder = authPolicyBuilder.RequireAuthenticatedUser();
                     options.DefaultPolicy = authPolicyBuilder.Build();
                 });
-
                 #endregion
 
                 return builder.Build();
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
 
         public static WebApplication ConfigurePipeline(this WebApplication app)
         {
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-
+                // Development-only middleware
             }
             app.UseSwagger();
             app.UseSwaggerUI();
@@ -212,20 +192,18 @@ namespace ARCN.API.Extensions
             app.UseRouting();
             app.UseCors("allowAllOrigins");
             app.UseHttpsRedirection();
-            app.UseAuthentication();
+            app.UseAuthentication();  // Ensure this comes before UseAuthorization
             app.UseAuthorization();
             app.UseSession();
             app.MapControllers().RequireAuthorization();
 
-
             return app;
         }
+
         internal static IApplicationBuilder SeedDatabase(this IApplicationBuilder app)
         {
             using var serviceScope = app.ApplicationServices.CreateScope();
-
             var seeders = serviceScope.ServiceProvider.GetServices<ARCNDbSeeder>();
-
             foreach (var seed in seeders)
             {
                 seed.SeedDatabaseAsync().GetAwaiter().GetResult();

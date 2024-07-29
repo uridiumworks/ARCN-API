@@ -43,8 +43,13 @@ namespace ARCN.Repository
             services.AddScoped<IUnitOfWork>(c => { return c.GetRequiredService<ARCNDbContext>(); });
             services.AddScoped<IUserProfileRepository, UserProfileRepository>(); ;
             services.AddScoped<IStateRepository, StateRepository>();
-           // services.AddScoped<ISecurityQuestionAnswerRepository, SecurityQuestionAnswerRepository>();
-           // services.AddScoped<ISecurityQuestionRepository, SecurityQuestionRepository>();
+            services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<IJournalRepository, JournalRepository>();
+            services.AddScoped<INewsLetterRepository, NewsLetterRepository>();
+            services.AddScoped<IReportsRepository, ReportsRepository>();
+
+            // services.AddScoped<ISecurityQuestionAnswerRepository, SecurityQuestionAnswerRepository>();
+            // services.AddScoped<ISecurityQuestionRepository, SecurityQuestionRepository>();
 
 
             return services;
