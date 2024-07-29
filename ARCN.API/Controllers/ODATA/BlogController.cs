@@ -1,4 +1,5 @@
 ﻿using ARCN.Application.DataModels.Identity;
+using ARCN.Application.Interfaces.Repositories;
 using ARCN.Application.Interfaces.Services;
 using ARCN.Infrastructure.Services.ApplicationServices;
 using Microsoft.AspNetCore.Http;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace ARCN.API.Controllers.ODATA
 {
@@ -15,27 +17,22 @@ namespace ARCN.API.Controllers.ODATA
     {
         private readonly IBlogService blogService;
         private readonly ILogger<BlogController> logger;
+        private readonly IBlogRepository blogRepository;
 
-        public BlogController(IBlogService blogService, ILogger<BlogController> logger)
+        public BlogController(IBlogService blogService, ILogger<BlogController> logger,IBlogRepository blogRepository)
         {
             this.blogService = blogService;
             this.logger = logger;
+            this.blogRepository = blogRepository;
         }
         [HttpGet("GetAllBlog")]
         [EnableQuery]
         public async ValueTask<ActionResult<Blog>> GetAllBlog()
         {
 
-            var result = await blogService.GetAllBlog();
-            if (result.Success)
-            {
-                return Ok();
+            var result = blogRepository.FindAll();
 
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return Ok(result);
 
         }
 
@@ -43,16 +40,10 @@ namespace ARCN.API.Controllers.ODATA
         [EnableQuery]
         public async ValueTask<ActionResult<Blog>> GetBlogById(int key)
         {
-            var result = await blogService.GetBlogById(key);
-            if (result.Success)
-            {
-                return Ok();
+            var result = await blogRepository.FindByIdAsync(key);
 
-            }
-            else
-            {
-                return BadRequest();
-            }
+           return Ok(result);
+
         }
 
     }

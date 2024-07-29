@@ -1,4 +1,5 @@
-﻿using ARCN.Application.DataModels.Identity;
+﻿using ARCN.Application.DataModels.ContentManagement;
+using ARCN.Application.DataModels.Identity;
 using ARCN.Application.Interfaces.Services;
 using ARCN.Infrastructure.Services.ApplicationServices;
 using Microsoft.AspNetCore.Http;
@@ -21,13 +22,13 @@ namespace ARCN.API.Controllers.API
             this.logger = logger;
         }
         [HttpPost("CreateNewsLetter")]
-        public async ValueTask<ActionResult<NewsLetter>> Post([FromBody] NewsLetter model)
+        public async ValueTask<ActionResult<NewsLetter>> Post([FromBody] NewsLetter model,CancellationToken cancellationToken)
         {
 
-            var result=await newsLetterService.AddNewsLetterAsync(model);
+            var result=await newsLetterService.AddNewsLetterAsync(model, cancellationToken);
             if (result.Success)
             {
-                return Ok();
+                return Ok(result);
 
             }
             else
@@ -38,7 +39,7 @@ namespace ARCN.API.Controllers.API
         }
 
         [HttpPut("UpdateNewsLetter/{key}")]
-        public async ValueTask<ActionResult<NewsLetter>> Put(int key, [FromBody] NewsLetter NewsLetter)
+        public async ValueTask<ActionResult<NewsLetter>> Put(int key, [FromBody] NewsLetterDataModel NewsLetter)
         {
             var result = await newsLetterService.UpdateNewsLetterAsync(key,NewsLetter);
             if (result.Success)

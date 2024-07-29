@@ -1,4 +1,5 @@
-﻿using ARCN.Application.DataModels.Identity;
+﻿using ARCN.Application.DataModels.ContentManagement;
+using ARCN.Application.DataModels.Identity;
 using ARCN.Application.Interfaces.Services;
 using ARCN.Infrastructure.Services.ApplicationServices;
 using Microsoft.AspNetCore.Http;
@@ -21,10 +22,10 @@ namespace ARCN.API.Controllers.API
             this.logger = logger;
         }
         [HttpPost("CreateJournals")]
-        public async ValueTask<ActionResult<Journals>> Post([FromBody] Journals model)
+        public async ValueTask<ActionResult<Journals>> Post([FromBody] Journals model,CancellationToken cancellationToken)
         {
 
-            var result=await journalsService.AddJournalsAsync(model);
+            var result=await journalsService.AddJournalsAsync(model, cancellationToken);
             if (result.Success)
             {
                 return Ok();
@@ -38,7 +39,7 @@ namespace ARCN.API.Controllers.API
         }
 
         [HttpPut("UpdateJournals/{key}")]
-        public async ValueTask<ActionResult<Journals>> Put(int key, [FromBody] Journals Journals)
+        public async ValueTask<ActionResult<Journals>> Put(int key, [FromBody] JournalsDataModel Journals)
         {
             var result = await journalsService.UpdateJournalsAsync(key,Journals);
             if (result.Success)

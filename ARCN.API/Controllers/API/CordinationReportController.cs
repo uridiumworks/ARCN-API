@@ -1,4 +1,5 @@
-﻿using ARCN.Application.DataModels.Identity;
+﻿using ARCN.Application.DataModels.ContentManagement;
+using ARCN.Application.DataModels.Identity;
 using ARCN.Application.Interfaces.Services;
 using ARCN.Infrastructure.Services.ApplicationServices;
 using Microsoft.AspNetCore.Http;
@@ -21,10 +22,10 @@ namespace ARCN.API.Controllers.API
             this.logger = logger;
         }
         [HttpPost("CreateCordinationReport")]
-        public async ValueTask<ActionResult<CordinationReport>> Post([FromBody] CordinationReport model)
+        public async ValueTask<ActionResult<CordinationReport>> Post([FromBody] CordinationReport model,CancellationToken cancellationToken)
         {
 
-            var result=await cordinationReportService.AddCordinationReportAsync(model);
+            var result=await cordinationReportService.AddCordinationReportAsync(model,cancellationToken);
             if (result.Success)
             {
                 return Ok();
@@ -38,7 +39,7 @@ namespace ARCN.API.Controllers.API
         }
 
         [HttpPut("UpdateCordinationReport/{key}")]
-        public async ValueTask<ActionResult<CordinationReport>> Put(int key, [FromBody] CordinationReport CordinationReport)
+        public async ValueTask<ActionResult<CordinationReport>> Put(int key, [FromBody] CordinationReportDataModel CordinationReport)
         {
             var result = await cordinationReportService.UpdateCordinationReportAsync(key,CordinationReport);
             if (result.Success)

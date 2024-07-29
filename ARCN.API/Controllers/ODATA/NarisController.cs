@@ -1,4 +1,5 @@
 ﻿using ARCN.Application.DataModels.Identity;
+using ARCN.Application.Interfaces.Repositories;
 using ARCN.Application.Interfaces.Services;
 using ARCN.Infrastructure.Services.ApplicationServices;
 using Microsoft.AspNetCore.Http;
@@ -15,27 +16,21 @@ namespace ARCN.API.Controllers.ODATA
     {
         private readonly INarisService narisService;
         private readonly ILogger<NarisController> logger;
+        private readonly INarisRepository narisRepository;
 
-        public NarisController(INarisService narisService, ILogger<NarisController> logger)
+        public NarisController(INarisService narisService, ILogger<NarisController> logger,INarisRepository narisRepository)
         {
             this.narisService = narisService;
             this.logger = logger;
+            this.narisRepository = narisRepository;
         }
         [HttpGet("GetAllNaris")]
         [EnableQuery]
         public async ValueTask<ActionResult<Naris>> GetAllNaris()
         {
 
-            var result = await narisService.GetAllNaris();
-            if (result.Success)
-            {
-                return Ok();
-
-            }
-            else
-            {
-                return BadRequest();
-            }
+            var result = narisRepository.FindAll();
+            return Ok(result);
 
         }
 
@@ -43,16 +38,8 @@ namespace ARCN.API.Controllers.ODATA
         [EnableQuery]
         public async ValueTask<ActionResult<Naris>> GetNarisById(int key)
         {
-            var result = await narisService.GetNarisById(key);
-            if (result.Success)
-            {
-                return Ok();
-
-            }
-            else
-            {
-                return BadRequest();
-            }
+            var result = await narisRepository.FindByIdAsync(key);
+          return Ok(result);
         }
 
     }

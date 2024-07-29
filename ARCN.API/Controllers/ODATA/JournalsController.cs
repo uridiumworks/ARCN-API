@@ -1,4 +1,5 @@
 ﻿using ARCN.Application.DataModels.Identity;
+using ARCN.Application.Interfaces.Repositories;
 using ARCN.Application.Interfaces.Services;
 using ARCN.Infrastructure.Services.ApplicationServices;
 using Microsoft.AspNetCore.Http;
@@ -15,27 +16,22 @@ namespace ARCN.API.Controllers.ODATA
     {
         private readonly IJournalsService journalsService;
         private readonly ILogger<JournalsController> logger;
+        private readonly IJournalRepository journalRepository;
 
-        public JournalsController(IJournalsService journalsService, ILogger<JournalsController> logger)
+        public JournalsController(IJournalsService journalsService, ILogger<JournalsController> logger,IJournalRepository journalRepository)
         {
             this.journalsService = journalsService;
             this.logger = logger;
+            this.journalRepository = journalRepository;
         }
         [HttpGet("GetJournals")]
         [EnableQuery]
         public async ValueTask<ActionResult<Journals>> GetJournals()
         {
 
-            var result = await journalsService.GetAllJournals();
-            if (result.Success)
-            {
-                return Ok();
+            var result =  journalRepository.FindAll();
+                return Ok(result);
 
-            }
-            else
-            {
-                return BadRequest();
-            }
 
         }
 
@@ -43,10 +39,10 @@ namespace ARCN.API.Controllers.ODATA
         [EnableQuery]
         public async ValueTask<ActionResult<Journals>> GetJournalById(int key)
         {
-            var result = await journalsService.GetJournalsById(key);
-            if (result.Success)
+            var result = await journalRepository.FindByIdAsync(key);
+            if (result!=null)
             {
-                return Ok();
+                return Ok(result);
 
             }
             else

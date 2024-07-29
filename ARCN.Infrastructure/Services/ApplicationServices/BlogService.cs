@@ -8,6 +8,7 @@ using ARCN.Application.Interfaces;
 using ARCN.Application.Interfaces.Repositories;
 using ARCN.Application.Interfaces.Services;
 using ARCN.Repository.Repositories;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 
 namespace ARCN.Infrastructure.Services.ApplicationServices
@@ -19,47 +20,47 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         private readonly IUserProfileRepository userProfileRepository;
         private readonly IUserprofileService userprofileService;
         private readonly IUserIdentityService userIdentityService;
+        private readonly IMapper mapper;
 
         public BlogService(
             IBlogRepository blogRepository,
             IUnitOfWork unitOfWork,
             IUserProfileRepository userProfileRepository,
             IUserprofileService userprofileService,
-            IUserIdentityService userIdentityService) {
+            IUserIdentityService userIdentityService,
+            IMapper mapper) {
             this.blogRepository = blogRepository;
             this.unitOfWork = unitOfWork;
             this.userProfileRepository = userProfileRepository;
             this.userprofileService = userprofileService;
             this.userIdentityService = userIdentityService;
+            this.mapper = mapper;
         }
-        public async ValueTask<ResponseModel<string>> AddBlogAsync(Blog model)
+        public async ValueTask<ResponseModel<Blog>> AddBlogAsync(Blog model, CancellationToken cancellationToken)
         {
             try
             {
 
-            var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-            if (user == null)
-            {
-                return new ResponseModel<string>
-                {
-                    Success = false,
-                    Message = "User not found",
-                };
-            }
+            //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+            //if (user == null)
+            //{
+            //    return new ResponseModel<string>
+            //    {
+            //        Success = false,
+            //        Message = "User not found",
+            //    };
+            //}
 
-                unitOfWork.Add(model);
+                var result= await blogRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
-                return new ResponseModel<string>
-                {
-                    Success = true,
-                    Message = "Update request successfully submitted",
-                };
+
+                return new ResponseModel<Blog> { Success = true, Message = "Successfully submitted", Data = result };
 
             }
             catch (Exception ex)
             {
 
-                return new ResponseModel<string>
+                return new ResponseModel<Blog>
                 {
                     Success = false,
                     Message = "Fail to insert",
@@ -84,34 +85,37 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
             return ResponseModel<Blog>.SuccessMessage(data: blogs);
         }
-        public async ValueTask<ResponseModel<string>> UpdateBlogAsync(int blogid, Blog model)
+        public async ValueTask<ResponseModel<Blog>> UpdateBlogAsync(int blogid, BlogDataModel model)
         {
             try
             {
 
-                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-                if (user == null)
-                {
-                    return new ResponseModel<string>
-                    {
-                        Success = false,
-                        Message = "User not found",
-                    };
-                }
+                //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                //if (user == null)
+                //{
+                //    return new ResponseModel<string>
+                //    {
+                //        Success = false,
+                //        Message = "User not found",
+                //    };
+                //}
                 var blogs = await blogRepository.FindByIdAsync(blogid);
                 if (blogs != null)
                 {
-                    unitOfWork.Update(model);
+                    mapper.Map(model, blogs);
+
+                    var res= blogRepository.Update(blogs);
                     unitOfWork.SaveChanges();
-                    return new ResponseModel<string>
+                    return new ResponseModel<Blog>
                     {
                         Success = true,
-                        Message = "Update request successfully submitted",
+                        Message = "Updated successfully",
+                        Data=res
                     };
                 }
                 else
                 {
-                    return new ResponseModel<string>
+                    return new ResponseModel<Blog>
                     {
                         Success = false,
                         Message = "Update Failed",
@@ -121,7 +125,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             catch (Exception ex)
             {
 
-                return new ResponseModel<string>
+                return new ResponseModel<Blog>
                 {
                     Success = false,
                     Message = "Fail to insert",
@@ -134,19 +138,19 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             try
             {
 
-                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-                if (user == null)
-                {
-                    return new ResponseModel<string>
-                    {
-                        Success = false,
-                        Message = "User not found",
-                    };
-                }
+                //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                //if (user == null)
+                //{
+                //    return new ResponseModel<string>
+                //    {
+                //        Success = false,
+                //        Message = "User not found",
+                //    };
+                //}
                 var blogs = await blogRepository.FindByIdAsync(blogid);
                 if (blogs != null)
                 {
-                    unitOfWork.Remove(blogs);
+                    blogRepository.Remove(blogs);
                     unitOfWork.SaveChanges();
                     return new ResponseModel<string>
                     {

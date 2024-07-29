@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ARCN.Repository")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4ddc0fb5f6c2e9810566e3388c64d5bc8e4bcde0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6fe9fa6e39888aea260b52ba551eb70bcf0a2166")]
 [assembly: System.Reflection.AssemblyProductAttribute("ARCN.Repository")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ARCN.Repository")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

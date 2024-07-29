@@ -23,8 +23,7 @@
 	  <ProjectReference Include="..\ARCN.Domain\ARCN.Domain.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="AutoMaps\" />
-	  <Folder Include="DataModels\ContentManagement\" />
+	  <Folder Include="DataModels\ContentModel\" />
 	  <Folder Include="Helper\Constants\" />
 	</ItemGroup>
 

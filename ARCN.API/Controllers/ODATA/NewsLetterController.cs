@@ -1,4 +1,5 @@
 ﻿using ARCN.Application.DataModels.Identity;
+using ARCN.Application.Interfaces.Repositories;
 using ARCN.Application.Interfaces.Services;
 using ARCN.Infrastructure.Services.ApplicationServices;
 using Microsoft.AspNetCore.Http;
@@ -15,27 +16,23 @@ namespace ARCN.API.Controllers.ODATA
     {
         private readonly INewsLetterService newsLetterService;
         private readonly ILogger<NewsLetterController> logger;
+        private readonly INewsLetterRepository newsLetterRepository;
 
-        public NewsLetterController(INewsLetterService newsLetterService, ILogger<NewsLetterController> logger)
+        public NewsLetterController(INewsLetterService newsLetterService, ILogger<NewsLetterController> logger,INewsLetterRepository newsLetterRepository)
         {
             this.newsLetterService = newsLetterService;
             this.logger = logger;
+            this.newsLetterRepository = newsLetterRepository;
         }
         [HttpGet("GetAllNewsLetter")]
         [EnableQuery]
         public async ValueTask<ActionResult<NewsLetter>> GetAllNewsLetter()
         {
 
-            var result = await newsLetterService.GetAllNewsLetter();
-            if (result.Success)
-            {
-                return Ok();
+            var result =  newsLetterRepository.FindAll();
+          
+             return Ok(result);
 
-            }
-            else
-            {
-                return BadRequest();
-            }
 
         }
 
@@ -43,16 +40,8 @@ namespace ARCN.API.Controllers.ODATA
         [EnableQuery]
         public async ValueTask<ActionResult<NewsLetter>> GetNewsLetterById(int key)
         {
-            var result = await newsLetterService.GetNewsLetterById(key);
-            if (result.Success)
-            {
-                return Ok();
-
-            }
-            else
-            {
-                return BadRequest();
-            }
+            var result = await newsLetterRepository.FindByIdAsync(key);
+           return Ok(result);
         }
 
     }

@@ -9,10 +9,10 @@ namespace ARCN.Application.Interfaces.Services
 {
     public interface IBlogService
     {
-        ValueTask<ResponseModel<string>> AddBlogAsync(Blog model);
+        ValueTask<ResponseModel<Blog>> AddBlogAsync(Blog model, CancellationToken cancellationToken);
         ValueTask<ResponseModel<Blog>> GetAllBlog();
         ValueTask<ResponseModel<Blog>> GetBlogById(int blogid);
-        ValueTask<ResponseModel<string>> UpdateBlogAsync(int blogid, Blog model);
+        ValueTask<ResponseModel<Blog>> UpdateBlogAsync(int blogid, BlogDataModel model);
         ValueTask<ResponseModel<string>> DeleteBlogAsync(int blogid);
     }
 }
