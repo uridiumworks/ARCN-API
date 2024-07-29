@@ -47,6 +47,8 @@ namespace ARCN.Repository
             services.AddScoped<IJournalRepository, JournalRepository>();
             services.AddScoped<INewsLetterRepository, NewsLetterRepository>();
             services.AddScoped<IReportsRepository, ReportsRepository>();
+            services.AddScoped<INarisRepository, NarisRepository>();
+            services.AddScoped<ICordinationReportRepository, CordinationReportRepository>();
 
             // services.AddScoped<ISecurityQuestionAnswerRepository, SecurityQuestionAnswerRepository>();
             // services.AddScoped<ISecurityQuestionRepository, SecurityQuestionRepository>();
