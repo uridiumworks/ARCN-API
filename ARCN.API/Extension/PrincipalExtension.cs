@@ -1,8 +1,5 @@
-﻿using System.Diagnostics;
-using System.Security.Claims;
-using System.Security.Principal;
-
-namespace ARCN.API.Extension
+﻿
+namespace NovaBank.API.Extensions
 {
     public static class PrincipalExtension
     {
@@ -60,29 +57,17 @@ namespace ARCN.API.Extension
             return claim.Value;
         }
 
-        public static string GetPatientProfile(this IPrincipal principal)
+        public static string GetUserProfile(this IPrincipal principal)
         {
-            return principal.Identity.GetPatientProfile();
+            return principal.Identity.GetUserProfile();
         }
-        private static string GetPatientProfile(this IIdentity identity)
+        private static string GetUserProfile(this IIdentity identity)
         {
             var id = identity as ClaimsIdentity;
             var claim = id.FindFirst("profileId");
 
             if (claim == null) throw new InvalidOperationException($"profileId claim is missing");
             return claim.Value;
-        }
-        public static IEnumerable<Claim> GetUserRole(this IPrincipal principal)
-        {
-            return principal.Identity.GetUserRole();
-        }
-        private static IEnumerable<Claim> GetUserRole(this IIdentity identity)
-        {
-            var id = identity as ClaimsIdentity;
-            var claim = id.FindAll(ClaimTypes.Role);
-
-            if (claim == null) throw new InvalidOperationException($"roleId claim is missing");
-            return claim;
         }
 
 

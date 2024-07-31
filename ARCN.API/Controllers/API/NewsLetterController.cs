@@ -44,7 +44,7 @@ namespace ARCN.API.Controllers.API
             var result = await newsLetterService.UpdateNewsLetterAsync(key,NewsLetter);
             if (result.Success)
             {
-                return Ok();
+                return Ok(result);
 
             }
             else

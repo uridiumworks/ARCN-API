@@ -11,21 +11,21 @@ namespace ARCN.API.Controllers.API
 {
     [Route("api/[controller]")]
     [AllowAnonymous]
-    public class JournalsController : ODataController
+    public class EventController : ODataController
     {
-        private readonly IJournalsService journalsService;
-        private readonly ILogger<JournalsController> logger;
+        private readonly IEventService EventService;
+        private readonly ILogger<EventController> logger;
 
-        public JournalsController(IJournalsService journalsService, ILogger<JournalsController> logger)
+        public EventController(IEventService EventService, ILogger<EventController> logger)
         {
-            this.journalsService = journalsService;
+            this.EventService = EventService;
             this.logger = logger;
         }
-        [HttpPost("CreateJournals")]
-        public async ValueTask<ActionResult<Journals>> Post([FromBody] Journals model,CancellationToken cancellationToken)
+        [HttpPost("CreateEvent")]
+        public async ValueTask<ActionResult<Event>> Post([FromBody] Event model,CancellationToken cancellationToken)
         {
 
-            var result=await journalsService.AddJournalsAsync(model, cancellationToken);
+            var result=await EventService.AddEventAsync(model, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -38,10 +38,10 @@ namespace ARCN.API.Controllers.API
 
         }
 
-        [HttpPut("UpdateJournals/{key}")]
-        public async ValueTask<ActionResult<Journals>> Put(int key, [FromBody] JournalsDataModel Journals)
+        [HttpPut("UpdateEvent/{key}")]
+        public async ValueTask<ActionResult<Event>> Put(int key, [FromBody] EventDataModel Event)
         {
-            var result = await journalsService.UpdateJournalsAsync(key,Journals);
+            var result = await EventService.UpdateEventAsync(key,Event);
             if (result.Success)
             {
                 return Ok(result);
@@ -52,10 +52,10 @@ namespace ARCN.API.Controllers.API
                 return BadRequest();
             }
         }
-        [HttpPut("Delete/{key}")]
-        public async ValueTask<ActionResult<Journals>> Delete(int key)
+        [HttpDelete("Delete/{key}")]
+        public async ValueTask<ActionResult<Event>> Delete(int key)
         {
-            var result = await journalsService.DeleteJournalsAsync(key);
+            var result = await EventService.DeleteEventAsync(key);
             if (result.Success)
             {
                 return Ok();
