@@ -96,7 +96,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(30),
-                SigningCredentials = creds
+                SigningCredentials = creds,
+                Issuer = configuration["JwtConfig:Issuer"]!
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

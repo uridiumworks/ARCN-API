@@ -1,6 +1,5 @@
-﻿using ARCN.Domain.Commons.Authorization;
-using Microsoft.Extensions.Options;
-
+﻿using Microsoft.Extensions.Options;
+using ARCN.Domain.Commons.Authorization;
 
 namespace ARCN.API.Permissions
 {

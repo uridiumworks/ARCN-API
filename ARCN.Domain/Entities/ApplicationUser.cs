@@ -9,8 +9,10 @@ namespace ARCN.Domain.Entities
            Journals=new HashSet<Journals>();
            NewsLetters=new HashSet<NewsLetter>();
            Reports=new HashSet<Reports>();
-            Naris=new HashSet<Naris>();
-            CordinationReports=new HashSet<CordinationReport>();
+           Naris=new HashSet<Naris>();
+           Extensions = new HashSet<Extension>();
+           FCAs = new HashSet<FCA>();
+           CordinationReports =new HashSet<CordinationReport>();
         }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryDate { get; set; }
@@ -21,6 +23,8 @@ namespace ARCN.Domain.Entities
         public virtual ICollection<Journals> Journals { get; set; }
         public virtual ICollection<NewsLetter> NewsLetters { get; set; }
         public virtual ICollection<Reports> Reports { get; set; }
+        public virtual ICollection<FCA> FCAs { get; set; }
+        public virtual ICollection<Extension> Extensions { get; set; }
         public virtual ICollection<Naris> Naris { get; set; }
         public virtual ICollection<CordinationReport> CordinationReports { get; set; }
         public void UpdateUser(ApplicationUser applicationUser)

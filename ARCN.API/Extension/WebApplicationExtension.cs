@@ -142,13 +142,13 @@ namespace ARCN.API.Extensions
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
-                        ValidAudience = builder.Configuration["JwtConfig:Audience"],
+                       // ValidAudience = builder.Configuration["JwtConfig:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Key"])),
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        RoleClaimType = ClaimTypes.Role
+                       // RoleClaimType = ClaimTypes.Role
                     };
                 });
 

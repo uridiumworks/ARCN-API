@@ -1,13 +1,14 @@
-﻿
-using ARCN.Domain.Commons.Authorization;
+﻿using ARCN.Domain.Commons.Authorization;
 
 namespace ARCN.API.Permissions
 {
     public class PermissionAuthorizationHandler : AuthorizationHandler<PermissionRequirement>
     {
-        public PermissionAuthorizationHandler()
-        {
+        private readonly IConfiguration configuration;
 
+        public PermissionAuthorizationHandler(IConfiguration configuration)
+        {
+            this.configuration = configuration;
         }
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
         {
@@ -16,7 +17,7 @@ namespace ARCN.API.Permissions
             var permission = context.User.Claims
                 .Where(x => x.Type == AppClaim.Permission 
                 && x.Value == requirement.Permission
-                && x.Issuer == "LOCAL AUTHORITY");
+                && x.Issuer == configuration["JwtConfig:Issuer"]);
 
             if (permission.Any()) 
             {

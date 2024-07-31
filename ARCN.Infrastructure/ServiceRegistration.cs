@@ -32,6 +32,9 @@ namespace ARCN.Infrastructure
             services.AddScoped<INewsLetterService, NewsLetterService>();
             services.AddScoped<INarisService, NarisService>();
             services.AddScoped<ICordinationReportService, CordinationReportService>();
+            services.AddScoped<IEventService, EventService>();
+             services.AddScoped<IExtensionService, ExtensionService>();
+             services.AddScoped<IFCAService, FCAService>();
 
             return services;
         }
