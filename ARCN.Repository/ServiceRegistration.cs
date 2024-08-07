@@ -54,8 +54,10 @@ namespace ARCN.Repository
             services.AddScoped<IExtensionRepository, ExtensionRepository>();
             services.AddScoped<ILocalGovernmentAreaRepository, LocalGovernmentRepository>();
 
-            // services.AddScoped<ISecurityQuestionAnswerRepository, SecurityQuestionAnswerRepository>();
-            // services.AddScoped<ISecurityQuestionRepository, SecurityQuestionRepository>();
+            services.AddScoped<IProgramRepository, ProgramRepository>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IEntrepreneurshipRepository, EntrepreneurshipRepository>();
+            services.AddScoped<ISupervisionReportRepository, SupervisorReportRepository>();
 
 
             return services;
