@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ARCN.Repository.Migrations
 {
     [DbContext(typeof(ARCNDbContext))]
-    [Migration("20240807020041_InitialMigration")]
+    [Migration("20240807104220_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -24,6 +24,66 @@ namespace ARCN.Repository.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ARCN.Domain.Entities.ARCNProgram", b =>
+                {
+                    b.Property<int>("ARCNProgramId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ARCNProgramId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ARCNProgramId"));
+
+                    b.Property<string>("BannerUrl")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("BannerUrl");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTime?>("PublishOn")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PublishOn");
+
+                    b.Property<string>("PublisherName")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("PublisherName");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)")
+                        .HasColumnName("Title");
+
+                    b.Property<bool?>("UseBanner")
+                        .HasColumnType("bit")
+                        .HasColumnName("UseBanner");
+
+                    b.Property<string>("UserProfileId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("UserProfileId");
+
+                    b.HasKey("ARCNProgramId");
+
+                    b.HasIndex("UserProfileId");
+
+                    b.ToTable("tbl_ARCNProgram", (string)null);
+                });
 
             modelBuilder.Entity("ARCN.Domain.Entities.ApplicationRoleClaim", b =>
                 {
@@ -277,6 +337,133 @@ namespace ARCN.Repository.Migrations
                     b.HasIndex("UserProfileId");
 
                     b.ToTable("tbl_CordinationReport", (string)null);
+                });
+
+            modelBuilder.Entity("ARCN.Domain.Entities.Entrepreneurship", b =>
+                {
+                    b.Property<int>("EntrepreneurshipId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("EntrepreneurshipId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EntrepreneurshipId"));
+
+                    b.Property<string>("AuthorName")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("AuthorName");
+
+                    b.Property<string>("BannerUrl")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("BannerUrl");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("DurationPerDay")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
+                        .HasColumnName("DurationPerDay");
+
+                    b.Property<DateTime?>("EventEndDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("EventEndDate");
+
+                    b.Property<DateTime?>("EventStartDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("EventStartDate");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Subject")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)")
+                        .HasColumnName("Title");
+
+                    b.Property<string>("UserProfileId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("UserProfileId");
+
+                    b.Property<string>("Venue")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("Visibility");
+
+                    b.HasKey("EntrepreneurshipId");
+
+                    b.HasIndex("UserProfileId");
+
+                    b.ToTable("tbl_Entrepreneurship", (string)null);
+                });
+
+            modelBuilder.Entity("ARCN.Domain.Entities.Event", b =>
+                {
+                    b.Property<int>("EventId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventId"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AuthorName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BannerUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DurationPerDay")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EventEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("EventStartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserProfileId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Venue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EventId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Event");
                 });
 
             modelBuilder.Entity("ARCN.Domain.Entities.Extension", b =>
@@ -722,6 +909,66 @@ namespace ARCN.Repository.Migrations
                     b.ToTable("tbl_NewsLetter", (string)null);
                 });
 
+            modelBuilder.Entity("ARCN.Domain.Entities.Project", b =>
+                {
+                    b.Property<int>("ProjectId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Project");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectId"));
+
+                    b.Property<string>("BannerUrl")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("BannerUrl");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTime?>("PublishOn")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PublishOn");
+
+                    b.Property<string>("PublisherName")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("PublisherName");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)")
+                        .HasColumnName("Title");
+
+                    b.Property<bool?>("UseBanner")
+                        .HasColumnType("bit")
+                        .HasColumnName("UseBanner");
+
+                    b.Property<string>("UserProfileId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("UserProfileId");
+
+                    b.HasKey("ProjectId");
+
+                    b.HasIndex("UserProfileId");
+
+                    b.ToTable("tbl_Project", (string)null);
+                });
+
             modelBuilder.Entity("ARCN.Domain.Entities.Reports", b =>
                 {
                     b.Property<int>("ReportsId")
@@ -828,6 +1075,67 @@ namespace ARCN.Repository.Migrations
                     b.HasKey("StateId");
 
                     b.ToTable("tbl_State", (string)null);
+                });
+
+            modelBuilder.Entity("ARCN.Domain.Entities.SupervisionReport", b =>
+                {
+                    b.Property<int>("SupervisionReportId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("SupervisionReport");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SupervisionReportId"));
+
+                    b.Property<string>("AuthorEmail")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("AuthorEmail");
+
+                    b.Property<string>("BannerUrl")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("BannerUrl");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTime?>("PublishOn")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PublishOn");
+
+                    b.Property<string>("PublisherName")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("PublisherName");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)")
+                        .HasColumnName("Title");
+
+                    b.Property<string>("UserProfileId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("UserProfileId");
+
+                    b.HasKey("SupervisionReportId");
+
+                    b.HasIndex("UserProfileId");
+
+                    b.ToTable("tbl_SupervisionReport", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -938,6 +1246,17 @@ namespace ARCN.Repository.Migrations
                     b.ToTable("tbl_UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ARCN.Domain.Entities.ARCNProgram", b =>
+                {
+                    b.HasOne("ARCN.Domain.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany("ARCNPrograms")
+                        .HasForeignKey("UserProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
             modelBuilder.Entity("ARCN.Domain.Entities.ApplicationRoleClaim", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -965,6 +1284,26 @@ namespace ARCN.Repository.Migrations
                         .HasForeignKey("UserProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("ARCN.Domain.Entities.Entrepreneurship", b =>
+                {
+                    b.HasOne("ARCN.Domain.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany("Entrepreneurships")
+                        .HasForeignKey("UserProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("ARCN.Domain.Entities.Event", b =>
+                {
+                    b.HasOne("ARCN.Domain.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany("Events")
+                        .HasForeignKey("ApplicationUserId");
 
                     b.Navigation("ApplicationUser");
                 });
@@ -1071,10 +1410,32 @@ namespace ARCN.Repository.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
+            modelBuilder.Entity("ARCN.Domain.Entities.Project", b =>
+                {
+                    b.HasOne("ARCN.Domain.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany("Projects")
+                        .HasForeignKey("UserProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
             modelBuilder.Entity("ARCN.Domain.Entities.Reports", b =>
                 {
                     b.HasOne("ARCN.Domain.Entities.ApplicationUser", "ApplicationUser")
                         .WithMany("Reports")
+                        .HasForeignKey("UserProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("ARCN.Domain.Entities.SupervisionReport", b =>
+                {
+                    b.HasOne("ARCN.Domain.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany("SupervisionReports")
                         .HasForeignKey("UserProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1126,9 +1487,15 @@ namespace ARCN.Repository.Migrations
 
             modelBuilder.Entity("ARCN.Domain.Entities.ApplicationUser", b =>
                 {
+                    b.Navigation("ARCNPrograms");
+
                     b.Navigation("Blogs");
 
                     b.Navigation("CordinationReports");
+
+                    b.Navigation("Entrepreneurships");
+
+                    b.Navigation("Events");
 
                     b.Navigation("Extensions");
 
@@ -1140,7 +1507,11 @@ namespace ARCN.Repository.Migrations
 
                     b.Navigation("NewsLetters");
 
+                    b.Navigation("Projects");
+
                     b.Navigation("Reports");
+
+                    b.Navigation("SupervisionReports");
                 });
 
             modelBuilder.Entity("ARCN.Domain.Entities.LocalGovernmentArea", b =>

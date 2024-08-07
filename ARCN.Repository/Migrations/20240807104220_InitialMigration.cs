@@ -120,6 +120,66 @@ namespace ARCN.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Event",
+                columns: table => new
+                {
+                    EventId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserProfileId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Subject = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BannerUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AuthorName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EventStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EventEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DurationPerDay = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Venue = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Event", x => x.EventId);
+                    table.ForeignKey(
+                        name: "FK_Event_tbl_UsersProfile_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "tbl_UsersProfile",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tbl_ARCNProgram",
+                columns: table => new
+                {
+                    ARCNProgramId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserProfileId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    BannerUrl = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PublisherName = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    PublishOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UseBanner = table.Column<bool>(type: "bit", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbl_ARCNProgram", x => x.ARCNProgramId);
+                    table.ForeignKey(
+                        name: "FK_tbl_ARCNProgram_tbl_UsersProfile_UserProfileId",
+                        column: x => x.UserProfileId,
+                        principalTable: "tbl_UsersProfile",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tbl_Blog",
                 columns: table => new
                 {
@@ -175,6 +235,37 @@ namespace ARCN.Repository.Migrations
                     table.PrimaryKey("PK_tbl_CordinationReport", x => x.CordinationReportId);
                     table.ForeignKey(
                         name: "FK_tbl_CordinationReport_tbl_UsersProfile_UserProfileId",
+                        column: x => x.UserProfileId,
+                        principalTable: "tbl_UsersProfile",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tbl_Entrepreneurship",
+                columns: table => new
+                {
+                    EntrepreneurshipId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserProfileId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    BannerUrl = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AuthorName = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    EventStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EventEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DurationPerDay = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    Visibility = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbl_Entrepreneurship", x => x.EntrepreneurshipId);
+                    table.ForeignKey(
+                        name: "FK_tbl_Entrepreneurship_tbl_UsersProfile_UserProfileId",
                         column: x => x.UserProfileId,
                         principalTable: "tbl_UsersProfile",
                         principalColumn: "Id",
@@ -248,6 +339,35 @@ namespace ARCN.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "tbl_Project",
+                columns: table => new
+                {
+                    Project = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserProfileId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    BannerUrl = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PublisherName = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    PublishOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UseBanner = table.Column<bool>(type: "bit", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbl_Project", x => x.Project);
+                    table.ForeignKey(
+                        name: "FK_tbl_Project_tbl_UsersProfile_UserProfileId",
+                        column: x => x.UserProfileId,
+                        principalTable: "tbl_UsersProfile",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tbl_Reports",
                 columns: table => new
                 {
@@ -274,6 +394,35 @@ namespace ARCN.Repository.Migrations
                     table.PrimaryKey("PK_tbl_Reports", x => x.ReportsId);
                     table.ForeignKey(
                         name: "FK_tbl_Reports_tbl_UsersProfile_UserProfileId",
+                        column: x => x.UserProfileId,
+                        principalTable: "tbl_UsersProfile",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tbl_SupervisionReport",
+                columns: table => new
+                {
+                    SupervisionReport = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserProfileId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    BannerUrl = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PublisherName = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    AuthorEmail = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    PublishOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbl_SupervisionReport", x => x.SupervisionReport);
+                    table.ForeignKey(
+                        name: "FK_tbl_SupervisionReport_tbl_UsersProfile_UserProfileId",
                         column: x => x.UserProfileId,
                         principalTable: "tbl_UsersProfile",
                         principalColumn: "Id",
@@ -498,9 +647,19 @@ namespace ARCN.Repository.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Event_ApplicationUserId",
+                table: "Event",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LocalGovernmentArea_StateId",
                 table: "LocalGovernmentArea",
                 column: "StateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tbl_ARCNProgram_UserProfileId",
+                table: "tbl_ARCNProgram",
+                column: "UserProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tbl_Blog_UserProfileId",
@@ -510,6 +669,11 @@ namespace ARCN.Repository.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_tbl_CordinationReport_UserProfileId",
                 table: "tbl_CordinationReport",
+                column: "UserProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tbl_Entrepreneurship_UserProfileId",
+                table: "tbl_Entrepreneurship",
                 column: "UserProfileId");
 
             migrationBuilder.CreateIndex(
@@ -568,6 +732,11 @@ namespace ARCN.Repository.Migrations
                 column: "UserProfileId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_tbl_Project_UserProfileId",
+                table: "tbl_Project",
+                column: "UserProfileId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_tbl_Reports_UserProfileId",
                 table: "tbl_Reports",
                 column: "UserProfileId");
@@ -583,6 +752,11 @@ namespace ARCN.Repository.Migrations
                 column: "NormalizedName",
                 unique: true,
                 filter: "[NormalizedName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tbl_SupervisionReport_UserProfileId",
+                table: "tbl_SupervisionReport",
+                column: "UserProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tbl_UserClaims_UserId",
@@ -616,10 +790,19 @@ namespace ARCN.Repository.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Event");
+
+            migrationBuilder.DropTable(
+                name: "tbl_ARCNProgram");
+
+            migrationBuilder.DropTable(
                 name: "tbl_Blog");
 
             migrationBuilder.DropTable(
                 name: "tbl_CordinationReport");
+
+            migrationBuilder.DropTable(
+                name: "tbl_Entrepreneurship");
 
             migrationBuilder.DropTable(
                 name: "tbl_Extension");
@@ -637,10 +820,16 @@ namespace ARCN.Repository.Migrations
                 name: "tbl_NewsLetter");
 
             migrationBuilder.DropTable(
+                name: "tbl_Project");
+
+            migrationBuilder.DropTable(
                 name: "tbl_Reports");
 
             migrationBuilder.DropTable(
                 name: "tbl_RoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "tbl_SupervisionReport");
 
             migrationBuilder.DropTable(
                 name: "tbl_UserClaims");

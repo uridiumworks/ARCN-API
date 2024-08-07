@@ -4,11 +4,11 @@ using AutoMapper;
 
 namespace ARCN.Application.AutoMaps
 {
-    public class EventAutoMap : Profile
+    public class ProjectAutoMap : Profile
     {
-        public EventAutoMap()
+        public ProjectAutoMap()
         {
-            CreateMap<EventDataModel, Event>().ReverseMap();
+            CreateMap<ProjectDataModel, Project>().ReverseMap();
         }
     }
 }

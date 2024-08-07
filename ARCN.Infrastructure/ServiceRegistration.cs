@@ -39,6 +39,9 @@ namespace ARCN.Infrastructure
             services.AddScoped<IProgramService, ProgramService>();
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<ISupervisionReportService, SupervisionReportService>();
+            services.AddScoped<IUserSettingService, UserSettingsService>();
+            services.AddScoped<IRegisterUserService, RegisterUserService>();
+
 
             return services;
         }
