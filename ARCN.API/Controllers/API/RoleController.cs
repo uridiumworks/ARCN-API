@@ -17,12 +17,12 @@ namespace ARCN.API.Controllers.API
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly ILogger<RoleController> logger;
-        private readonly IUserService userService;
+        private readonly IUserSettingService userService;
         private readonly IMapper mapper;
         private readonly IValidator<AddUserToRoleDataModel> validatorAddUserToRole;
 
         public RoleController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
-            ILogger<RoleController> logger, IUserService userService, IMapper mapper, IValidator<AddUserToRoleDataModel> validatorAddUserToRole)
+            ILogger<RoleController> logger, IUserSettingService userService, IMapper mapper, IValidator<AddUserToRoleDataModel> validatorAddUserToRole)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;

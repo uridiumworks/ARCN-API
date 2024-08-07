@@ -139,6 +139,8 @@ namespace ARCN.API.Extensions
                 })
                 .AddJwtBearer(options =>
                 {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
@@ -180,7 +182,7 @@ namespace ARCN.API.Extensions
         {
             if (app.Environment.IsDevelopment())
             {
-                // Development-only middleware
+                app.UseDeveloperExceptionPage();
             }
             app.UseSwagger();
             app.UseSwaggerUI();
