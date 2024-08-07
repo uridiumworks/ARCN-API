@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ARCN.Repository.Migrations
 {
     [DbContext(typeof(ARCNDbContext))]
-    [Migration("20240731214853_Event_FCA_Extension")]
-    partial class Event_FCA_Extension
+    [Migration("20240807020041_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
