@@ -113,7 +113,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
         public async ValueTask<ResponseModel<ApplicationUser>> GetProfile()
         {
-            var adminUser = await userManager.Users.Where(x => x.IsAdmin /*&& x.Id == userIdentityService.UserProfileId*/).FirstOrDefaultAsync();
+            var adminUser = await userManager.Users.Where(x => x.IsAdmin && x.Id == userIdentityService.UserId).FirstOrDefaultAsync();
 
             return ResponseModel<ApplicationUser>.SuccessMessage("success", adminUser);
         }

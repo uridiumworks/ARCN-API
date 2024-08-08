@@ -52,23 +52,7 @@ namespace ARCN.API.Controllers.API
             return Ok(result);
         }
 
-        [HttpGet("GetAllUsers")]
-        public async ValueTask<ActionResult> GetAllUsers()
-        {
-            var result = await userSettingService.GetAllUsers();
-            return Ok(result);
-        }
-
-        /// <summary>
-        /// Get Profile
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("GetProfile")]
-        public async ValueTask<ActionResult> GetProfile()
-        {
-            var result = await userSettingService.GetProfile();
-            return Ok(result);
-        }
+       
 
 
         /// <summary>
