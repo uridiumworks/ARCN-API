@@ -20,22 +20,33 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         private readonly IUnitOfWork unitOfWork;
         private readonly IUserProfileRepository userProfileRepository;
         private readonly IMapper mapper;
+        private readonly IUserIdentityService userIdentityService;
 
         public SupervisionReportService(
             ISupervisionReportRepository supervisionReportRepository,
             IUnitOfWork unitOfWork,
             IUserProfileRepository userProfileRepository,
-            IMapper mapper) {
+            IMapper mapper,IUserIdentityService userIdentityService) {
             this.supervisionReportRepository = supervisionReportRepository;
             this.unitOfWork = unitOfWork;
             this.userProfileRepository = userProfileRepository;
             this.mapper = mapper;
+            this.userIdentityService = userIdentityService;
         }
         public async ValueTask<ResponseModel<SupervisionReport>> AddSupervisionReportAsync(SupervisionReport model, CancellationToken cancellationToken)
         {
             try
             {
-
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<SupervisionReport>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
+                model.UserProfileId=user.Id;
                 var result= await supervisionReportRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
 
@@ -74,6 +85,15 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         {
             try
             {
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<SupervisionReport>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
                 var SupervisionReports = await supervisionReportRepository.FindByIdAsync(SupervisionReportid);
                 if (SupervisionReports != null)
                 {
@@ -112,7 +132,15 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         {
             try
             {
-
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<string>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
                 var SupervisionReports = await supervisionReportRepository.FindByIdAsync(SupervisionReportid);
                 if (SupervisionReports != null)
                 {

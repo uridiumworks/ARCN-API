@@ -1,9 +1,18 @@
 ﻿
 using ARCN.API.Atrributes;
 using ARCN.Application.DataModels.UserProfile;
+using ARCN.Application.FluentValidations.ApplicationUser;
 using ARCN.Application.Interfaces.Services;
 using ARCN.Domain.Commons.Authorization;
+using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Formatter;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using Newtonsoft.Json;
+using NovaBank.Application.FluentValidations.ApplicationUser;
 
 namespace ARCN.API.Controllers.API
 {
@@ -23,25 +32,17 @@ namespace ARCN.API.Controllers.API
             this.registerUserService = registerUserService;
         }
 
-        /// <summary>
-        /// Create User
-        /// </summary>
-        /// <param name="adminUserProfileData"></param>
-        /// <returns></returns>
+
         [MustHavePermission(AppFeature.Users, AppAction.Create)]
         [HttpPost("CreateUser")]
         public async ValueTask<ActionResult> CreateUser([FromBody] NewUserDataModel adminUserProfileData)
         {
+
             var result = await userSettingService.CreateAdminUser(adminUserProfileData);
 
             return Ok(result);
         }
 
-        /// <summary>
-        /// Login User
-        /// </summary>
-        /// <param name="dataModel"></param>
-        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("LoginUser")]
         public async ValueTask<ActionResult> LoginUser([FromBody] LoginDataModel dataModel)
@@ -93,6 +94,60 @@ namespace ARCN.API.Controllers.API
         {
             var res = await userSettingService.RemoveAdminUser(id);
             return Ok(res);
+        }
+        [HttpPost("ResetPassword")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ResetPasswordModel>> ResetPassword(ResetPasswordModel resetPassword)
+        {
+
+            if (!ModelState.IsValid) return BadRequest();
+
+            var response = await registerUserService.ResetPassword(resetPassword);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest(response);
+            }
+
+        }
+
+
+        [HttpPost("ForgotPassword")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ForgotPassword(ForgotPassword forgotPassword)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+
+            var response = await registerUserService.ForgotPassword(forgotPassword);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest(response);
+            }
+        }
+        [HttpPost("ResetForgotPassword")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ResetPasswordModel>> ResetForgotPassword(ResetForgotPasswordModel resetPassword)
+        {
+
+            if (!ModelState.IsValid) return BadRequest();
+
+            var response = await registerUserService.ResetForgotPassword(resetPassword);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest(response);
+            }
+
         }
     }
 }

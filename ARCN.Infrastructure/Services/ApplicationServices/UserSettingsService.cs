@@ -24,11 +24,12 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         private readonly IPasswordHasher<ApplicationUser> passwordHasher;
         private readonly ITokenService tokenService;
         private readonly IUserService userService;
+        private readonly IUserIdentityService userIdentityService;
 
         public UserSettingsService(IUnitOfWork unitOfWork, ARCNDbContext context, IUserProfileRepository userProfileRepository, 
             RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
             IMapper mapper, IValidator<NewUserDataModel> validator, IPasswordHasher<ApplicationUser> passwordHasher,
-            ITokenService tokenService,IUserService userService)
+            ITokenService tokenService,IUserService userService,IUserIdentityService userIdentityService)
         {
             this.unitOfWork = unitOfWork;
             this.context = context;
@@ -40,6 +41,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             this.passwordHasher = passwordHasher;
             this.tokenService = tokenService;
             this.userService = userService;
+            this.userIdentityService = userIdentityService;
         }
 
         public async ValueTask<ResponseModel<UserResponseDataModel>> CreateAdminUser(NewUserDataModel adminUser)
@@ -51,7 +53,6 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 var err = validatorResult.Errors.Select(x => x.ErrorMessage).ToList();
                 return ResponseModel<UserResponseDataModel>.ErrorMessage("error", err);
             }
-
 
             var user = new ApplicationUser
             {

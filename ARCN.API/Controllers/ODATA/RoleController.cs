@@ -47,29 +47,6 @@ namespace ARCN.API.Controllers.ODATA
 
             return Ok(role);
         }
-
-        [HttpPost("Role")]
-        public async ValueTask<ActionResult<IdentityRole>> Post([FromBody] RoleDataModel role)
-        {
-
-            if (string.IsNullOrEmpty(role.Name) || role == null) return BadRequest();
-
-            if (!await roleManager.RoleExistsAsync(role.Name.Trim()))
-            {
-                var result = await roleManager.CreateAsync(new IdentityRole { Name = role.Name });
-                if (result.Succeeded)
-                {
-                    var roleData = await roleManager.FindByNameAsync(role.Name);
-
-                    await userService.AddPermissionToRole(role.RoleClaims, roleData.Id);
-                    return Ok(roleData);
-                }
-            }
-
-            return BadRequest();
-
-        }
-
        
 
         [HttpGet("GetRolesClaims")]

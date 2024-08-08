@@ -16,7 +16,6 @@
   <ItemGroup>
     <Compile Remove="Controllers\API\RoleController.cs" />
     <Compile Remove="Controllers\API\UserProfileController.cs" />
-    <Compile Remove="Controllers\ODATA\RoleController.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />

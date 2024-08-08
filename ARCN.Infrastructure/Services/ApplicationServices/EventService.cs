@@ -41,7 +41,16 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         {
             try
             {
-
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Event>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
+                model.UserProfileId = user.Id;
                 var result= await EventRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
 
@@ -76,10 +85,29 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
             return ResponseModel<Event>.SuccessMessage(data: Events);
         }
+        public double GetAllEventTotal()
+        {
+            var events = EventRepository.FindAll().Where(x => x.CreatedDate < DateTime.Now.Date.AddMonths(-1)).Count();
+            return events;
+        }
+        public double GetAllEventPreviousTotal()
+        {
+            var events = EventRepository.FindAll().Where(x => x.CreatedDate > DateTime.Now.Date.AddMonths(-1)).Count();
+            return events;
+        }
         public async ValueTask<ResponseModel<Event>> UpdateEventAsync(int Eventid, EventDataModel model)
         {
             try
             {
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Event>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
                 var Events = await EventRepository.FindByIdAsync(Eventid);
                 if (Events != null)
                 {

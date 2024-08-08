@@ -49,7 +49,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     Message = "User not found",
                 };
             }
-
+            model.UserProfileId = user.Id;
                var result= await newsLetterRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
                 return new ResponseModel<NewsLetter>
@@ -88,20 +88,30 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
             return ResponseModel<NewsLetter>.SuccessMessage(data: NewsLetters);
         }
+        public double GetAllNewsLettersTotal()
+        {
+            var NewsLetters = newsLetterRepository.FindAll().Where(x => x.CreatedDate < DateTime.Now.Date.AddMonths(-1)).Count();
+            return NewsLetters;
+        }
+        public double GetAllNewsLettersPreviousTotal() 
+        {
+            var NewsLetters = newsLetterRepository.FindAll().Where(x => x.CreatedDate > DateTime.Now.Date.AddMonths(-1)).Count();
+            return NewsLetters;
+        }
         public async ValueTask<ResponseModel<NewsLetter>> UpdateNewsLetterAsync(int NewsLetterid, NewsLetterDataModel model)
         {
             try
             {
 
-                //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-                //if (user == null)
-                //{
-                //    return new ResponseModel<NewsLetter>
-                //    {
-                //        Success = false,
-                //        Message = "User not found",
-                //    };
-                //}
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<NewsLetter>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
                 var NewsLetters = await newsLetterRepository.FindByIdAsync(NewsLetterid);
                 if (NewsLetters != null)
                 {

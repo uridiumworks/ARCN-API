@@ -132,10 +132,12 @@ namespace ARCN.API.Extensions
                 });
 
                 // Simplified and focused on JWT Bearer tokens
-                builder.Services.AddAuthentication(options =>
+                builder.Services.AddAuthentication(opt =>
                 {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+                    opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer(options =>
                 {
@@ -144,12 +146,12 @@ namespace ARCN.API.Extensions
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
-                       // ValidAudience = builder.Configuration["JwtConfig:Audience"],
+                        ValidAudience = builder.Configuration["JwtConfig:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Key"])),
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = false,
+                        ValidateIssuerSigningKey = false,
                        // RoleClaimType = ClaimTypes.Role
                     };
                 });
