@@ -15,5 +15,7 @@ namespace ARCN.Application.Interfaces.Services
         ValueTask<ResponseModel<Naris>> GetNarisById(int Narisid);
         ValueTask<ResponseModel<Naris>> UpdateNarisAsync(int Narisid, NarisDataModel model);
         ValueTask<ResponseModel<string>> DeleteNarisAsync(int Narisid);
+        double GetAllNarisPreviousTotal();
+        double GetAllNarisTotal();
     }
 }

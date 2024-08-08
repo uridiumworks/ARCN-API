@@ -41,17 +41,17 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             try
             {
 
-            //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-            //if (user == null)
-            //{
-            //    return new ResponseModel<CordinationReport>
-            //    {
-            //        Success = false,
-            //        Message = "User not found",
-            //    };
-            //}
-
-             var result=  await cordinationReportRepository.AddAsync(model,cancellationToken);
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<CordinationReport>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
+                model.UserProfileId = user.Id;
+                var result=  await cordinationReportRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
                 return new ResponseModel<CordinationReport>
                 {
@@ -94,15 +94,15 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             try
             {
 
-                //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-                //if (user == null)
-                //{
-                //    return new ResponseModel<CordinationReport>
-                //    {
-                //        Success = false,
-                //        Message = "User not found",
-                //    };
-                //}
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<CordinationReport>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
                 var CordinationReports = await cordinationReportRepository.FindByIdAsync(CordinationReportid);
                 if (CordinationReports != null)
                 {

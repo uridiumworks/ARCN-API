@@ -20,22 +20,33 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         private readonly IUnitOfWork unitOfWork;
         private readonly IUserProfileRepository userProfileRepository;
         private readonly IMapper mapper;
+        private readonly IUserIdentityService userIdentityService;
 
         public ProgramService(
             IProgramRepository programRepository,
             IUnitOfWork unitOfWork,
             IUserProfileRepository userProfileRepository,
-            IMapper mapper) {
+            IMapper mapper,IUserIdentityService userIdentityService) {
             this.programRepository = programRepository;
             this.unitOfWork = unitOfWork;
             this.userProfileRepository = userProfileRepository;
             this.mapper = mapper;
+            this.userIdentityService = userIdentityService;
         }
         public async ValueTask<ResponseModel<ARCNProgram>> AddProgramAsync(ARCNProgram model, CancellationToken cancellationToken)
         {
             try
             {
-
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<ARCNProgram>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
+                model.UserProfileId = user.Id;
                 var result= await programRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
 
@@ -70,10 +81,29 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
             return ResponseModel<ARCNProgram>.SuccessMessage(data: Programs);
         }
+        public double GetAllProgramTotal()
+        {
+            var program = programRepository.FindAll().Where(x => x.CreatedDate < DateTime.Now.Date.AddMonths(-1)).Count();
+            return program;
+        }
+        public double GetAllProgramPreviousTotal() 
+        {
+            var program = programRepository.FindAll().Where(x => x.CreatedDate > DateTime.Now.Date.AddMonths(-1)).Count();
+            return program;
+        }
         public async ValueTask<ResponseModel<ARCNProgram>> UpdateProgramAsync(int Programid, ProgramDataModel model)
         {
             try
             {
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<ARCNProgram>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
                 var Programs = await programRepository.FindByIdAsync(Programid);
                 if (Programs != null)
                 {

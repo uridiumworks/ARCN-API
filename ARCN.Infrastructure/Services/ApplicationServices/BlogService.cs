@@ -40,17 +40,16 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         {
             try
             {
-
-            //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-            //if (user == null)
-            //{
-            //    return new ResponseModel<string>
-            //    {
-            //        Success = false,
-            //        Message = "User not found",
-            //    };
-            //}
-
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Blog>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
+                model.UserProfileId = userIdentityService.UserId;
                 var result= await blogRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
 
@@ -90,15 +89,15 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             try
             {
 
-                //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-                //if (user == null)
-                //{
-                //    return new ResponseModel<string>
-                //    {
-                //        Success = false,
-                //        Message = "User not found",
-                //    };
-                //}
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Blog>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
                 var blogs = await blogRepository.FindByIdAsync(blogid);
                 if (blogs != null)
                 {
@@ -138,15 +137,15 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             try
             {
 
-                //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-                //if (user == null)
-                //{
-                //    return new ResponseModel<string>
-                //    {
-                //        Success = false,
-                //        Message = "User not found",
-                //    };
-                //}
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<string>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
                 var blogs = await blogRepository.FindByIdAsync(blogid);
                 if (blogs != null)
                 {

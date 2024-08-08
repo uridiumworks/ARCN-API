@@ -20,22 +20,33 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         private readonly IUnitOfWork unitOfWork;
         private readonly IUserProfileRepository userProfileRepository;
         private readonly IMapper mapper;
+        private readonly IUserIdentityService userIdentityService;
 
         public EntrepreneurshipService(
             IEntrepreneurshipRepository entrepreneurshipRepository,
             IUnitOfWork unitOfWork,
             IUserProfileRepository userProfileRepository,
-            IMapper mapper) {
+            IMapper mapper,IUserIdentityService userIdentityService) {
             this.entrepreneurshipRepository = entrepreneurshipRepository;
             this.unitOfWork = unitOfWork;
             this.userProfileRepository = userProfileRepository;
             this.mapper = mapper;
+            this.userIdentityService = userIdentityService;
         }
         public async ValueTask<ResponseModel<Entrepreneurship>> AddEntrepreneurshipAsync(Entrepreneurship model, CancellationToken cancellationToken)
         {
             try
             {
-
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Entrepreneurship>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
+                model.UserProfileId = user.Id;
                 var result= await entrepreneurshipRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
 
@@ -74,7 +85,16 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         {
             try
             {
-                var Entrepreneurships = await entrepreneurshipRepository.FindByIdAsync(Entrepreneurshipid);
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Entrepreneurship>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
+                 var Entrepreneurships = await entrepreneurshipRepository.FindByIdAsync(Entrepreneurshipid);
                 if (Entrepreneurships != null)
                 {
                     mapper.Map(model, Entrepreneurships);

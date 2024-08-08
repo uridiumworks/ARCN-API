@@ -15,5 +15,7 @@ namespace ARCN.Application.Interfaces.Services
         ValueTask<ResponseModel<ARCNProgram>> GetProgramById(int Programid);
         ValueTask<ResponseModel<ARCNProgram>> UpdateProgramAsync(int Programid, ProgramDataModel model);
         ValueTask<ResponseModel<string>> DeleteProgramAsync(int Programid);
+        double GetAllProgramPreviousTotal();
+        double GetAllProgramTotal();
     }
 }

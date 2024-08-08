@@ -15,5 +15,7 @@ namespace ARCN.Application.Interfaces.Services
         ValueTask<ResponseModel<Event>> GetEventById(int Eventid);
         ValueTask<ResponseModel<Event>> UpdateEventAsync(int Eventid, EventDataModel model);
         ValueTask<ResponseModel<string>> DeleteEventAsync(int Eventid);
+        double GetAllEventPreviousTotal();
+        double GetAllEventTotal();
     }
 }

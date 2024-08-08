@@ -20,22 +20,33 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         private readonly IUnitOfWork unitOfWork;
         private readonly IUserProfileRepository userProfileRepository;
         private readonly IMapper mapper;
+        private readonly IUserIdentityService userIdentityService;
 
         public ProjectService(
             IProjectRepository projectRepository,
             IUnitOfWork unitOfWork,
             IUserProfileRepository userProfileRepository,
-            IMapper mapper) {
+            IMapper mapper,IUserIdentityService userIdentityService) {
             this.projectRepository = projectRepository;
             this.unitOfWork = unitOfWork;
             this.userProfileRepository = userProfileRepository;
             this.mapper = mapper;
+            this.userIdentityService = userIdentityService;
         }
         public async ValueTask<ResponseModel<Project>> AddProjectAsync(Project model, CancellationToken cancellationToken)
         {
             try
             {
-
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Project>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
+                model.UserProfileId=user.Id;
                 var result= await projectRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
 
@@ -70,10 +81,29 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
             return ResponseModel<Project>.SuccessMessage(data: Projects);
         }
+        public double GetAllProjectTotal()
+        {
+            var project = projectRepository.FindAll().Where(x => x.CreatedDate < DateTime.Now.Date.AddMonths(-1)).Count();
+            return project;
+        }
+        public double GetAllProjectPreviousTotal()
+        {
+            var project = projectRepository.FindAll().Where(x => x.CreatedDate > DateTime.Now.Date.AddMonths(-1)).Count();
+            return project;
+        }
         public async ValueTask<ResponseModel<Project>> UpdateProjectAsync(int Projectid, ProjectDataModel model)
         {
             try
             {
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Project>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
                 var Projects = await projectRepository.FindByIdAsync(Projectid);
                 if (Projects != null)
                 {
@@ -112,7 +142,15 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         {
             try
             {
-
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<string>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
                 var Projects = await projectRepository.FindByIdAsync(Projectid);
                 if (Projects != null)
                 {

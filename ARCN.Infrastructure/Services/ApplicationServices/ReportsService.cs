@@ -41,17 +41,17 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             try
             {
 
-            //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-            //if (user == null)
-            //{
-            //    return new ResponseModel<Reports>
-            //    {
-            //        Success = false,
-            //        Message = "User not found",
-            //    };
-            //}
-
-               var result= await reportsRepository.AddAsync(model,cancellationToken);
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Reports>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
+                model.UserProfileId=user.Id;
+                var result= await reportsRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
                 return new ResponseModel<Reports>
                 {
@@ -94,15 +94,15 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             try
             {
 
-                //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-                //if (user == null)
-                //{
-                //    return new ResponseModel<Reports>
-                //    {
-                //        Success = false,
-                //        Message = "User not found",
-                //    };
-                //}
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Reports>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
                 var Reportss = await reportsRepository.FindByIdAsync(Reportsid);
                 if (Reportss != null)
                 {

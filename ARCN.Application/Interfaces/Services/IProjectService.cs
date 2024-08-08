@@ -15,5 +15,7 @@ namespace ARCN.Application.Interfaces.Services
         ValueTask<ResponseModel<Project>> GetProjectById(int Projectid);
         ValueTask<ResponseModel<Project>> UpdateProjectAsync(int Projectid, ProjectDataModel model);
         ValueTask<ResponseModel<string>> DeleteProjectAsync(int Projectid);
+        double GetAllProjectPreviousTotal();
+        double GetAllProjectTotal();
     }
 }

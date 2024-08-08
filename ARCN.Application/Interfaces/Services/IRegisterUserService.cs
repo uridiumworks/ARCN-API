@@ -11,5 +11,8 @@ namespace ARCN.Application.Interfaces.Services
     {
         ValueTask<ResponseModel<UserResponseDataModel>> Login(LoginDataModel loginDataModel);
         //ValueTask<UserResponseDataModel> CreateResponse(ApplicationUser user);
+        ValueTask<ResponseModel<UserResponseDataModel>> ResetPassword(ResetPasswordModel resetPassword);
+        ValueTask<ResponseModel<UserResponseDataModel>> ForgotPassword(ForgotPassword forgotPassword);
+        ValueTask<ResponseModel<UserResponseDataModel>> ResetForgotPassword(ResetForgotPasswordModel resetPassword);
     }
 }

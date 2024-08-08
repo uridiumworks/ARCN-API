@@ -40,7 +40,16 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         {
             try
             {
-
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Extension>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
+                model.UserProfileId = user.Id;
                 var result= await ExtensionRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
 
@@ -79,6 +88,15 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         {
             try
             {
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Extension>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
                 var Extensions = await ExtensionRepository.FindByIdAsync(Extensionid);
                 if (Extensions != null)
                 {

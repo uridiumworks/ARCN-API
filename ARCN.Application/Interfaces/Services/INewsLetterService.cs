@@ -15,5 +15,7 @@ namespace ARCN.Application.Interfaces.Services
         ValueTask<ResponseModel<NewsLetter>> GetNewsLetterById(int NewsLetterid);
         ValueTask<ResponseModel<NewsLetter>> UpdateNewsLetterAsync(int NewsLetterid, NewsLetterDataModel model);
         ValueTask<ResponseModel<string>> DeleteNewsLetterAsync(int NewsLetterid);
+        double GetAllNewsLettersPreviousTotal();
+        double GetAllNewsLettersTotal();
     }
 }
