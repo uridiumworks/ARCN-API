@@ -9,6 +9,7 @@ using ARCN.Application.DataModels.UserProfile;
 using Microsoft.EntityFrameworkCore;
 using ARCN.Application.DataModels.Identity;
 using ARCN.Domain.Commons.Authorization;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace ARCN.Infrastructure.Services.ApplicationServices
 {
@@ -25,11 +26,12 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         private readonly ITokenService tokenService;
         private readonly IUserService userService;
         private readonly IUserIdentityService userIdentityService;
+        private readonly IEmailSenderService emailSenderService;
 
         public UserSettingsService(IUnitOfWork unitOfWork, ARCNDbContext context, IUserProfileRepository userProfileRepository, 
             RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
             IMapper mapper, IValidator<NewUserDataModel> validator, IPasswordHasher<ApplicationUser> passwordHasher,
-            ITokenService tokenService,IUserService userService,IUserIdentityService userIdentityService)
+            ITokenService tokenService,IUserService userService,IUserIdentityService userIdentityService,IEmailSenderService emailSenderService)
         {
             this.unitOfWork = unitOfWork;
             this.context = context;
@@ -42,6 +44,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             this.tokenService = tokenService;
             this.userService = userService;
             this.userIdentityService = userIdentityService;
+            this.emailSenderService = emailSenderService;
         }
 
         public async ValueTask<ResponseModel<UserResponseDataModel>> CreateAdminUser(NewUserDataModel adminUser)
@@ -82,6 +85,10 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                         new Claim(AppClaimType.SecurityStamp, user.SecurityStamp)
                     };
                 await userService.AddUserClaimsAsync(user, claims);
+
+                var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                var newToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+                await emailSenderService.ConfirmEmailAddress(newToken, user);
 
                 var res = await userService.UserResponses(user);
                 return ResponseModel<UserResponseDataModel>.SuccessMessage("success", data:res);

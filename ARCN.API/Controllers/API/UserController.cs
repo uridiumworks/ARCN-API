@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using MR3.Application.DataModels.UserProfile;
 using Newtonsoft.Json;
 using NovaBank.Application.FluentValidations.ApplicationUser;
 
@@ -132,6 +133,37 @@ namespace ARCN.API.Controllers.API
                 return BadRequest(response);
             }
 
+        }
+        [HttpPost("ConfirmEmail")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ConfirmEmail([FromBody] ConfirmEmailDataModel confirmEmail)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+
+            var response = await registerUserService.ConfirmEmail(confirmEmail);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest(response);
+            }
+        }
+        [HttpPost("AddPassword")]
+        public async Task<ActionResult> AddPassword([FromBody] AddAdmUserPasswordDataModel pass)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+
+            var response = await registerUserService.AddUserPassword(pass);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest(response);
+            }
         }
     }
 }
