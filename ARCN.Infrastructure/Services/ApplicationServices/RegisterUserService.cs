@@ -12,9 +12,12 @@ using ARCN.Application.Interfaces.Services;
 using ARCN.Domain.Commons.Authorization;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using MR3.Application.DataModels.UserProfile;
 using Newtonsoft.Json;
 using NovaBank.Application.FluentValidations.ApplicationUser;
 
@@ -31,12 +34,13 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         private readonly IUserIdentityService userIdentityService;
         private readonly IValidator<ForgotPassword> forgotPasswordValidator;
         private readonly IEmailSenderService emailSenderService;
+        private readonly IPasswordValidator<ApplicationUser> passwordValidator;
 
         public RegisterUserService(ILogger<RegisterUserService> logger, IValidator<LoginDataModel> validator, 
             ITokenService tokenService, UserManager<ApplicationUser> userManager, 
             IUserProfileRepository userProfileRepository, IValidator<ResetPasswordModel> validatorResetPassword, 
             IUserIdentityService userIdentityService, IValidator<ForgotPassword> forgotPasswordValidator,
-            IEmailSenderService emailSenderService)
+            IEmailSenderService emailSenderService, IPasswordValidator<ApplicationUser> passwordValidator)
         {
             this.logger = logger;
             this.validator = validator;
@@ -47,6 +51,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             this.userIdentityService = userIdentityService;
             this.forgotPasswordValidator = forgotPasswordValidator;
             this.emailSenderService = emailSenderService;
+            this.passwordValidator = passwordValidator;
         }
         public async ValueTask<ResponseModel<UserResponseDataModel>> Login(LoginDataModel loginDataModel)
         {
@@ -219,5 +224,111 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
             return response;
         }
+        public async ValueTask<ResponseModel<ApplicationUser>> ConfirmEmail(ConfirmEmailDataModel confirmEmail)
+        {
+            var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(confirmEmail.Token));
+            logger.LogInformation("Email: {0} ", confirmEmail.Email);
+            logger.LogInformation("Token: {0} ", code);
+            var user = await userManager.FindByEmailAsync(confirmEmail.Email);
+
+            if (user == null)
+            {
+                return new ResponseModel<ApplicationUser>
+                {
+                    Success = false,
+                    Message = "Invalid user.",
+                };
+            }
+            var result = await userManager.ConfirmEmailAsync(user, code);
+
+            if (result.Succeeded) {
+
+                return new ResponseModel<ApplicationUser>
+                {
+                    Success = true,
+                    Message = "Password reset successful",
+                };
+            }
+            else
+            {
+                var errors = new List<string>();
+                foreach (var item in result.Errors)
+                {
+                   errors.Add(item.Description);
+                }
+                return new ResponseModel<ApplicationUser>
+                {
+                    Success = false,
+                    Message = "Fail to confirm email",
+                    Data =null
+                };
+            }
+        }
+
+        public async ValueTask<ResponseModel<ApplicationUser>> AddUserPassword(AddAdmUserPasswordDataModel dataModel)
+        {
+
+
+            var user = await userManager.FindByEmailAsync(dataModel.Email);
+
+            if (user == null)
+            {
+                return new ResponseModel<ApplicationUser>
+                {
+                    Success = false,
+                    Message = "Invalid user.",
+                };
+            }
+
+            var passwordValid = await passwordValidator.ValidateAsync(userManager, user, dataModel.Password);
+
+            if (!passwordValid.Succeeded)
+            {
+
+                var errors = new List<string>();
+                foreach (var item in passwordValid.Errors)
+                {
+                    errors.Add(item.Description);
+                }
+                return new ResponseModel<ApplicationUser>
+                {
+                    Success = false,
+                    Message = "Fail to confirm email",
+                    Data = null
+                };
+            }
+
+            user.EmailConfirmed = true;
+            await userManager.UpdateAsync(user);
+
+
+            var result = await userManager.AddPasswordAsync(user, dataModel.Password);
+
+
+            if (result.Succeeded)
+            {
+                return new ResponseModel<ApplicationUser>
+                {
+                    Success = true,
+                    Message = "Password added successfully!",
+                };
+            }
+            else
+            {
+
+                var errors = new List<string>();
+                foreach (var item in result.Errors)
+                {
+                    errors.Add(item.Description);
+                }
+                return new ResponseModel<ApplicationUser>
+                {
+                    Success = false,
+                    Message = "Fail to confirm email",
+                    Data = null
+                };
+            }
+        }
+
     }
 }
