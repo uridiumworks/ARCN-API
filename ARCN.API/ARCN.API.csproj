@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\API\RoleController.cs" />
     <Compile Remove="Controllers\API\UserProfileController.cs" />
   </ItemGroup>
   <ItemGroup>
