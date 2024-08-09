@@ -48,6 +48,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode = 404
                     };
                 }
                 model.UserProfileId = user.Id;
@@ -57,7 +58,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = true,
                     Message = "Update request successfully submitted",
-                    Data= result
+                    Data= result,
+                    StatusCode = 200
                 };
 
             }
@@ -67,7 +69,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<CordinationReport>
                 {
                     Success = false,
-                    Message = "Fail to insert",
+                    Message = ex.Message,
+                    StatusCode = 500
                 };
             }
         }
@@ -101,6 +104,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode = 404
                     };
                 }
                 var CordinationReports = await cordinationReportRepository.FindByIdAsync(CordinationReportid);
@@ -113,7 +117,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "Update successfully submitted",
-                        Data = result
+                        Data = result,
+                        StatusCode = 200
                     };
                 }
                 else
@@ -121,7 +126,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     return new ResponseModel<CordinationReport>
                     {
                         Success = false,
-                        Message = "Update Failed",
+                        Message = "Record Not Found",
+                        StatusCode = 404
                     };
                 }
             }
@@ -131,7 +137,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<CordinationReport  >
                 {
                     Success = false,
-                    Message = "Fail to insert",
+                    Message = ex.Message,
+                    StatusCode=500
                 };
             }
         }
@@ -148,6 +155,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode = 404
                     };
                 }
                 var CordinationReports = await cordinationReportRepository.FindByIdAsync(CordinationReportid);
@@ -159,6 +167,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "CordinationReport Deleted  successfully",
+                        StatusCode = 200
                     };
                 }
                 else
@@ -166,7 +175,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     return new ResponseModel<string>
                     {
                         Success = false,
-                        Message = "Failed to delete",
+                        Message = "Record Not Found",
+                        StatusCode = 404
                     };
                 }
             }
@@ -176,7 +186,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<string>
                 {
                     Success = false,
-                    Message = "Fail to Delete",
+                    Message = ex.Message,
+                    StatusCode = 500
                 };
             }
         }

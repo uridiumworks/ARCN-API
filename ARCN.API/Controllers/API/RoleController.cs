@@ -32,7 +32,7 @@ namespace ARCN.API.Controllers.API
             this.validatorAddUserToRole = validatorAddUserToRole;
         }
 
-        [HttpPost("Role")]
+        [HttpPost()]
         public async ValueTask<ActionResult<IdentityRole>> Post([FromBody] RoleDataModel role)
         {
 
@@ -54,7 +54,7 @@ namespace ARCN.API.Controllers.API
             
         }
 
-        [HttpPut("Role/{key}")]
+        [HttpPut("{key}")]
         public async ValueTask<ActionResult<IdentityRole>> Put(string key, [FromBody] string roleName )
         {
             if (string.IsNullOrEmpty(roleName)) return BadRequest();

@@ -28,12 +28,11 @@ namespace ARCN.API.Controllers.API
             var result=await programService.AddProgramAsync(model, cancellationToken);
             if (result.Success)
             {
-                return Ok(result);
-
+                return StatusCode(result.StatusCode, result);
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
 
         }
@@ -44,12 +43,12 @@ namespace ARCN.API.Controllers.API
             var result = await programService.UpdateProgramAsync(key,Program);
             if (result.Success)
             {
-                return Ok(result);
+                return StatusCode(result.StatusCode, result);
 
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
         }
         [HttpDelete("Delete/{key}")]
@@ -58,12 +57,11 @@ namespace ARCN.API.Controllers.API
             var result = await programService.DeleteProgramAsync(key);
             if (result.Success)
             {
-                return Ok();
-
+                return StatusCode(result.StatusCode);
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
         }
 

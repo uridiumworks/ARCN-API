@@ -106,6 +106,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode=404
                     };
                 }
                 var Events = await EventRepository.FindByIdAsync(Eventid);

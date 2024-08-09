@@ -28,12 +28,12 @@ namespace ARCN.API.Controllers.API
             var result=await reportsService.AddReportsAsync(model, cancellationToken);
             if (result.Success)
             {
-                return Ok(result);
+                return StatusCode(result.StatusCode, result);
 
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
 
         }
@@ -44,12 +44,12 @@ namespace ARCN.API.Controllers.API
             var result = await reportsService.UpdateReportsAsync(key,Reports);
             if (result.Success)
             {
-                return Ok(result);
+                return StatusCode(result.StatusCode, result);
 
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
         }
         [HttpDelete("Delete/{key}")]
@@ -58,12 +58,12 @@ namespace ARCN.API.Controllers.API
             var result = await reportsService.DeleteReportsAsync(key);
             if (result.Success)
             {
-                return Ok();
+                return StatusCode(result.StatusCode);
 
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
         }
 
