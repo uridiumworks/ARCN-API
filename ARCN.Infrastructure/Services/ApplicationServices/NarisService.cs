@@ -47,6 +47,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode=404
                     };
                 }
                 model.UserProfileId = user.Id;
@@ -56,7 +57,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = true,
                     Message = "successfully created",
-                    Data= result
+                    Data= result,
+                    StatusCode= 200
                 };
 
             }
@@ -67,6 +69,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = false,
                     Message = "Fail to insert",
+                    StatusCode = 500
                 };
             }
         }
@@ -110,6 +113,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode=404
                     };
                 }
                 var Nariss = await narisRepository.FindByIdAsync(Narisid);
@@ -122,7 +126,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "Update successfully",
-                        Data = result
+                        Data = result,
+                        StatusCode = 200
                     };
                 }
                 else
@@ -131,6 +136,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "Update Failed",
+                        StatusCode=404
                     };
                 }
             }
@@ -140,7 +146,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<Naris>
                 {
                     Success = false,
-                    Message = "Fail to Update",
+                    Message =  ex.Message,
+                    StatusCode = 500
                 };
             }
         }
@@ -157,6 +164,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode=404
                     };
                 }
                 var Nariss = await narisRepository.FindByIdAsync(Narisid);
@@ -168,6 +176,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "Naris Deleted  successfully",
+                        StatusCode=200
                     };
                 }
                 else
@@ -175,7 +184,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     return new ResponseModel<string>
                     {
                         Success = false,
-                        Message = "Failed to delete",
+                        Message = "Record Not found",
+                        StatusCode = 404
                     };
                 }
             }
@@ -185,7 +195,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<string>
                 {
                     Success = false,
-                    Message = "Fail to Delete",
+                    Message = ex.Message,
+                    StatusCode = 500
                 };
             }
         }

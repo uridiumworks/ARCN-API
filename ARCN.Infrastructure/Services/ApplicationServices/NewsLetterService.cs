@@ -47,6 +47,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = false,
                     Message = "User not found",
+                    StatusCode = 404
                 };
             }
             model.UserProfileId = user.Id;
@@ -56,7 +57,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = true,
                     Message = "Update request successfully submitted",
-                    Data=result
+                    Data=result,
+                    StatusCode = 200
                 };
 
             }
@@ -67,6 +69,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = false,
                     Message = "Fail to insert",
+                    StatusCode=500
                 };
             }
         }
@@ -110,6 +113,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode = 404
                     };
                 }
                 var NewsLetters = await newsLetterRepository.FindByIdAsync(NewsLetterid);
@@ -122,7 +126,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "Update request successfully submitted",
-                        Data=result
+                        Data=result,
+                        StatusCode = 200
                     };
                 }
                 else
@@ -130,7 +135,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     return new ResponseModel<NewsLetter>
                     {
                         Success = false,
-                        Message = "Update Failed",
+                        Message = "Record Not Found",
+                        StatusCode = 404
                     };
                 }
             }
@@ -141,6 +147,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = false,
                     Message = "Fail to insert",
+                    StatusCode = 500
                 };
             }
         }
@@ -157,6 +164,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode = 404
                     };
                 }
                 var NewsLetters = await newsLetterRepository.FindByIdAsync(NewsLetterid);
@@ -168,6 +176,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "NewsLetter Deleted  successfully",
+                        StatusCode = 200
                     };
                 }
                 else
@@ -175,7 +184,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     return new ResponseModel<string>
                     {
                         Success = false,
-                        Message = "Failed to delete",
+                        Message = "Record Not Found",
+                        StatusCode = 404
                     };
                 }
             }
@@ -186,6 +196,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = false,
                     Message = "Fail to Delete",
+                    StatusCode = 500
                 };
             }
         }
