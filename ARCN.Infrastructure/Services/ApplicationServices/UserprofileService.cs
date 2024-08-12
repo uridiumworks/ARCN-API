@@ -71,18 +71,18 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             if (!validatorResult.IsValid)
             {
                 var err = validatorResult.Errors.Select(x => x.ErrorMessage).ToList();
-                return new ResponseModel<ApplicationUser> { Message = "Failed validation", Success = false, Data = null, Errors = err };
+                return new ResponseModel<ApplicationUser> { Message = "Failed validation", Success = false, StatusCode=400, Errors = err };
             }
 
             var profile = await userProfileRepository.FindByIdAsync(id);
-            if (profile == null) return new ResponseModel<ApplicationUser> { Message = "Profile not found", Success = false, Data = null, Errors = new List<string> { "Profile not found" } };
+            if (profile == null) return new ResponseModel<ApplicationUser> { Message = "Profile not found", Success = false, StatusCode=404, Errors = new List<string> { "Profile not found" } };
 
             mapper.Map(dataModel, profile);
 
             userProfileRepository.Update(profile);
             await unitOfWork.SaveChangesAsync();
 
-            return new ResponseModel<ApplicationUser> { Success = true, Message = "Success", Data = profile };
+            return new ResponseModel<ApplicationUser> { Success = true, Message = "Success", Data = profile,StatusCode=200 };
 
         }
 

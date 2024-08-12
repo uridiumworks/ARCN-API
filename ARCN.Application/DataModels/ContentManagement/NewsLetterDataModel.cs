@@ -9,7 +9,6 @@ namespace ARCN.Application.DataModels.ContentManagement
 {
     public class NewsLetterDataModel
     {
-        public string? UserProfileId { get; set; }
         public string? Title { get; set; }
         public string? Category { get; set; }
         public string? BannerUrl { get; set; }

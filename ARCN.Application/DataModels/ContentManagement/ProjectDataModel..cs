@@ -9,7 +9,6 @@ namespace ARCN.Application.DataModels.ContentManagement
 {
     public class ProjectDataModel
     {
-        public string? UserProfileId { get; set; }
         public string? Title { get; set; }
         public string? BannerUrl { get; set; }
         public string? Description { get; set; }

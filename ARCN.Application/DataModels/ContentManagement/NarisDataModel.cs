@@ -9,8 +9,6 @@ namespace ARCN.Application.DataModels.ContentManagement
 {
     public class NarisDataModel
     {
-
-        public string? UserProfileId { get; set; }
         public string? InstitutionName { get; set; }
         public string? Description { get; set; }
         public string? PhoneNumber { get; set; }
