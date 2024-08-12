@@ -102,7 +102,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<UserResponseDataModel>
                 {
                     Success = false,
-                    Message = "Invalid user.",
+                    Message = "User not found",
+                    StatusCode=404
                 };
             }
             PasswordVerificationResult result = userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, resetPassword.CurrentPassword);
@@ -113,6 +114,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = false,
                     Message = "Incorrect Password",
+                    StatusCode = 400
                 };
             }
             var token = resetPassword.Token;
@@ -126,6 +128,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = true,
                     Message = "Password reset successful",
+                    StatusCode=200
                 }; 
             }
             else
@@ -155,7 +158,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<UserResponseDataModel>
                 {
                     Success = false,
-                    Message = "Invalid user.",
+                    Message = "User not found",
+                    StatusCode=404
                 };
 
             }
@@ -175,6 +179,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             {
                 Success = true,
                 Message = "Successfully",
+                StatusCode= 200
             };
         }
         public async ValueTask<ResponseModel<UserResponseDataModel>> ResetForgotPassword(ResetForgotPasswordModel resetPassword)
@@ -186,7 +191,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<UserResponseDataModel>
                 {
                     Success = false,
-                    Message = "Invalid user.",
+                    Message = "User not found",
+                    StatusCode=404
                 };
             }
            
@@ -201,6 +207,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = true,
                     Message = "Password reset successful",
+                    StatusCode = 200
                 };
             }
             else
@@ -236,7 +243,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<ApplicationUser>
                 {
                     Success = false,
-                    Message = "Invalid user.",
+                    Message = "User not found",
+                    StatusCode = 404
                 };
             }
             var result = await userManager.ConfirmEmailAsync(user, code);
@@ -247,6 +255,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = true,
                     Message = "Password reset successful",
+                    StatusCode=200
                 };
             }
             else
@@ -260,7 +269,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = false,
                     Message = "Fail to confirm email",
-                    Data =null
+                    StatusCode=400
                 };
             }
         }
@@ -276,7 +285,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<ApplicationUser>
                 {
                     Success = false,
-                    Message = "Invalid user.",
+                    Message = "User not found",
+                    StatusCode=404
                 };
             }
 
@@ -294,7 +304,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = false,
                     Message = "Fail to confirm email",
-                    Data = null
+                    StatusCode=400
                 };
             }
 
@@ -311,6 +321,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = true,
                     Message = "Password added successfully!",
+                    StatusCode= 200
                 };
             }
             else
@@ -325,7 +336,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = false,
                     Message = "Fail to confirm email",
-                    Data = null
+                    StatusCode = 400
                 };
             }
         }

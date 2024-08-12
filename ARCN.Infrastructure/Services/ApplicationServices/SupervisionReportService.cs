@@ -44,13 +44,14 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode=404
                     };
                 }
                 model.UserProfileId=user.Id;
                 var result= await supervisionReportRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
 
-                return new ResponseModel<SupervisionReport> { Success = true, Message = "Successfully submitted", Data = result };
+                return new ResponseModel<SupervisionReport> { Success = true, Message = "Successfully submitted", Data = result,StatusCode=200 };
 
             }
             catch (Exception ex)
@@ -59,7 +60,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<SupervisionReport>
                 {
                     Success = false,
-                    Message = "Fail to insert",
+                    Message = ex.Message,
+                    StatusCode = 500
                 };
             }
         }
@@ -92,6 +94,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode=404
                     };
                 }
                 var SupervisionReports = await supervisionReportRepository.FindByIdAsync(SupervisionReportid);
@@ -105,7 +108,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "Updated successfully",
-                        Data=res
+                        Data=res,
+                        StatusCode=200
                     };
                 }
                 else
@@ -113,7 +117,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     return new ResponseModel<SupervisionReport>
                     {
                         Success = false,
-                        Message = "Update Failed",
+                        Message = "Record not found",
+                        StatusCode=404
                     };
                 }
             }
@@ -123,7 +128,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<SupervisionReport>
                 {
                     Success = false,
-                    Message = "Fail to insert",
+                    Message = ex.Message,
+                    StatusCode= 500
                 };
             }
         }
@@ -139,6 +145,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode=404
                     };
                 }
                 var SupervisionReports = await supervisionReportRepository.FindByIdAsync(SupervisionReportid);
@@ -150,6 +157,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "SupervisionReport Deleted  successfully",
+                        StatusCode=200
                     };
                 }
                 else
@@ -157,7 +165,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     return new ResponseModel<string>
                     {
                         Success = false,
-                        Message = "Failed to delete",
+                        Message = "Record not found",
+                        StatusCode= 404
                     };
                 }
             }
@@ -167,7 +176,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<string>
                 {
                     Success = false,
-                    Message = "Fail to Delete",
+                    Message =ex.Message,
+                    StatusCode= 500
                 };
             }
         }

@@ -50,7 +50,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     StatusCode = 404
                 };
             }
-            model.UserProfileId = user.Id;
+               model.UserProfileId = user.Id;
                var result= await newsLetterRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
                 return new ResponseModel<NewsLetter>

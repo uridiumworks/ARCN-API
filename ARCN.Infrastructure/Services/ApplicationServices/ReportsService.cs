@@ -48,6 +48,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode=404
                     };
                 }
                 model.UserProfileId=user.Id;
@@ -57,7 +58,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = true,
                     Message = "Update request successfully submitted",
-                    Data = result
+                    Data = result,
+                    StatusCode= 200
                 };
 
             }
@@ -67,7 +69,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<Reports>
                 {
                     Success = false,
-                    Message = "Fail to insert",
+                    Message = ex.Message,
+                    StatusCode = 500
                 };
             }
         }
@@ -101,6 +104,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode= 404
                     };
                 }
                 var Reportss = await reportsRepository.FindByIdAsync(Reportsid);
@@ -113,6 +117,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "Update request successfully submitted",
+                        StatusCode= 200
                     };
                 }
                 else
@@ -120,7 +125,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     return new ResponseModel<Reports>
                     {
                         Success = false,
-                        Message = "Update Failed",
+                        Message = "Record not found",
+                        StatusCode=404
                     };
                 }
             }
@@ -130,7 +136,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<Reports>
                 {
                     Success = false,
-                    Message = "Fail to insert",
+                    Message = ex.Message,
+                    StatusCode = 500
                 };
             }
         }
@@ -147,6 +154,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode=404
                     };
                 }
                 var Reportss = await reportsRepository.FindByIdAsync(Reportsid);
@@ -158,6 +166,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "Reports Deleted  successfully",
+                        StatusCode=200
                     };
                 }
                 else
@@ -165,7 +174,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     return new ResponseModel<string>
                     {
                         Success = false,
-                        Message = "Failed to delete",
+                        Message = "Record not found",
+                        StatusCode=404
                     };
                 }
             }
@@ -175,7 +185,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<string>
                 {
                     Success = false,
-                    Message = "Fail to Delete",
+                    Message = ex.Message,
+                    StatusCode=500
                 };
             }
         }
