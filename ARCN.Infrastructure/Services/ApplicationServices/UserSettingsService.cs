@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using ARCN.Application.DataModels.Identity;
 using ARCN.Domain.Commons.Authorization;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.AspNetCore.Http;
 
 namespace ARCN.Infrastructure.Services.ApplicationServices
 {
@@ -96,14 +97,21 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             }
             else
             {
-                var validationError = new List<FluentValidation.Results.ValidationFailure>();
+                var validationError = new List<ResponseModel<UserResponseDataModel>>();
                 var errorResult = new ValidationResult();
                 foreach (var error in result.Errors)
                 {
-                    validationError.Add(new FluentValidation.Results.ValidationFailure(error.Code, error.Description));
+                    return new ResponseModel<UserResponseDataModel>
+                    {
+                        Success = false,
+                        Message = error.Description,
+                        StatusCode = 500
+                    };
                 }
-                errorResult.Errors = validationError;
-                throw new Errors.ValidationException(errorResult);
+
+                return default;
+
+
             }
             
 

@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 namespace ARCN.API.Controllers.API
 {
     [Route("api/[controller]")]
-    [AllowAnonymous]
     public class EntrepreneurshipController : ODataController
     {
         private readonly IEntrepreneurshipService entrepreneurshipService;

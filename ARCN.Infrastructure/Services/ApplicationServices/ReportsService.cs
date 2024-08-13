@@ -117,6 +117,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "Update request successfully submitted",
+                        Data=result,
                         StatusCode= 200
                     };
                 }
