@@ -21,7 +21,6 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         private readonly IUserprofileService userprofileService;
         private readonly IUserIdentityService userIdentityService;
         private readonly IMapper mapper;
-
         public BlogService(
             IBlogRepository blogRepository,
             IUnitOfWork unitOfWork,
@@ -59,7 +58,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             }
             catch (Exception ex)
             {
-
+               // logger.LogError(ex.Message, "Blog");
                 return new ResponseModel<Blog>
                 {
                     Success = false,

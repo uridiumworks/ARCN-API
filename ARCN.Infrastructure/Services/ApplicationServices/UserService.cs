@@ -87,6 +87,22 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         {
 
             logger.LogInformation("generating access token for user {0}", user.Email);
+            var userClaim = await userManager.GetClaimsAsync(user);
+            var roles = await userManager.GetRolesAsync(user);
+
+            var roleClaim = new List<Claim>();
+            var permissionClaim = new List<Claim>();
+            var permissions = new List<string>();
+
+            foreach (var role in roles)
+            {
+                roleClaim.Add(new Claim(ClaimTypes.Role, role));
+                var currentRole = await roleManager.FindByNameAsync(role);
+                var allPermissionForCurrentRole = await roleManager.GetClaimsAsync(currentRole);
+                permissionClaim.AddRange(allPermissionForCurrentRole);
+                permissions.AddRange(allPermissionForCurrentRole.Select(c => c.Value));
+            }
+
             var res = new UserResponseDataModel
             {
                 FirstName = user?.FirstName,
@@ -95,7 +111,10 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 PhoneNumber = user?.PhoneNumber,
                 UserName = user?.UserName,
                 RefreshToken = user?.RefreshToken,
-                Token = await tokenService.CreateTokenAsync(user)
+                Token = await tokenService.CreateTokenAsync(user),
+                // Assign roles and permissions
+                Roles = roles.ToList(),
+                Permissions = permissions.Distinct().ToList()
             };
 
             return res;

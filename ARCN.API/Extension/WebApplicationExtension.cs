@@ -44,7 +44,7 @@ namespace ARCN.API.Extensions
 
                 IEdmModel edmModel = new ARCNEntityDataModel().GetEntityDataModel();
                 builder.Services.AddControllers()
-                     .AddOData(opt => opt.AddRouteComponents("customer/odata", edmModel, batchHandler)
+                     .AddOData(opt => opt.AddRouteComponents("odata", edmModel, batchHandler)
                      .Select()
                      .Expand()
                      .OrderBy()
