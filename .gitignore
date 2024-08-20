@@ -245,3 +245,6 @@
 /ARCN.UnitTest/obj/Debug/net8.0/ARCN.UnitTest.assets.cache
 /ARCN.Repository/obj/Debug/net8.0/ARCN.Repository.AssemblyInfo.cs
 /ARCN.UnitTest/obj/Debug/net8.0/ARCN.UnitTest.AssemblyInfo.cs
+*.dll
+*.pdb
+*.json
