@@ -16,6 +16,7 @@ using System.Reflection;
 using ARCN.API.Permissions;
 using ARCN.Application.Interfaces;
 using Serilog;
+using ARCN.Application.DataModels.CloudUpload;
 
 namespace ARCN.API.Extensions
 {
@@ -103,7 +104,8 @@ namespace ARCN.API.Extensions
                     });
                 });
                 #endregion
-
+                builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+                builder.Services.Configure<List<FolderDataModel>>(builder.Configuration.GetSection("FileFolderNames"));
                 #region Identity and Services Registration
                 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                    .AddEntityFrameworkStores<ARCNDbContext>()

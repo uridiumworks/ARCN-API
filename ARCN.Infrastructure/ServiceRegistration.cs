@@ -43,6 +43,7 @@ namespace ARCN.Infrastructure
             services.AddScoped<IRegisterUserService, RegisterUserService>();
 
 
+
             return services;
         }
     }
