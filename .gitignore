@@ -240,3 +240,6 @@
 /ARCN.API/bin/Debug/net8.0/ARCN.API.dll
 /ARCN.UnitTest/obj/Debug/net8.0/ARCN.UnitTest.AssemblyInfoInputs.cache
 *.txt
+/ARCN.Domain/obj/Debug/net8.0/ARCN.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/ARCN.UnitTest/obj/Debug/net8.0/ARCN.UnitTest.GeneratedMSBuildEditorConfig.editorconfig
+/ARCN.UnitTest/obj/Debug/net8.0/ARCN.UnitTest.assets.cache
