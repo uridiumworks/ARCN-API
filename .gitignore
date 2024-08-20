@@ -239,3 +239,15 @@
 /ARCN.API/bin/Debug/net8.0/ARCN.API.deps.json
 /ARCN.API/bin/Debug/net8.0/ARCN.API.dll
 /ARCN.UnitTest/obj/Debug/net8.0/ARCN.UnitTest.AssemblyInfoInputs.cache
+/ARCN.UnitTest/bin/Debug/net8.0/ARCN.UnitTest.dll
+/ARCN.UnitTest/bin/Debug/net8.0/ARCN.UnitTest.pdb
+/ARCN.UnitTest/obj/Debug/net8.0/ARCN.UnitTest.pdb
+/ARCN.UnitTest/obj/Debug/net8.0/ARCN.UnitTest.dll
+/ARCN.UnitTest/obj/Debug/net8.0/ARCN.UnitTest.sourcelink.json
+/ARCN.UnitTest/obj/Debug/net8.0/ARCN.UnitTest.AssemblyInfo.cs
+/ARCN.UnitTest/obj/Debug/net8.0/refint/ARCN.UnitTest.dll
+/ARCN.UnitTest/obj/Debug/net8.0/ref/ARCN.UnitTest.dll
+/ARCN.Repository/obj/Debug/net8.0/ARCN.Repository.AssemblyInfo.cs
+/ARCN.Application/ARCN.Application.csproj
+/ARCN.API/Logs/log_006.txt
+*.txt
