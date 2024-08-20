@@ -16,6 +16,7 @@ using System.Reflection;
 using ARCN.API.Permissions;
 using ARCN.Application.Interfaces;
 using Serilog;
+using ARCN.Application.DataModels.CloudUpload;
 
 namespace ARCN.API.Extensions
 {
@@ -44,7 +45,7 @@ namespace ARCN.API.Extensions
 
                 IEdmModel edmModel = new ARCNEntityDataModel().GetEntityDataModel();
                 builder.Services.AddControllers()
-                     .AddOData(opt => opt.AddRouteComponents("customer/odata", edmModel, batchHandler)
+                     .AddOData(opt => opt.AddRouteComponents("odata", edmModel, batchHandler)
                      .Select()
                      .Expand()
                      .OrderBy()
@@ -103,7 +104,8 @@ namespace ARCN.API.Extensions
                     });
                 });
                 #endregion
-
+                builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+                builder.Services.Configure<List<FolderDataModel>>(builder.Configuration.GetSection("FileFolderNames"));
                 #region Identity and Services Registration
                 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                    .AddEntityFrameworkStores<ARCNDbContext>()
@@ -132,22 +134,26 @@ namespace ARCN.API.Extensions
                 });
 
                 // Simplified and focused on JWT Bearer tokens
-                builder.Services.AddAuthentication(options =>
+                builder.Services.AddAuthentication(opt =>
                 {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+                    opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer(options =>
                 {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
-                       // ValidAudience = builder.Configuration["JwtConfig:Audience"],
+                        ValidAudience = builder.Configuration["JwtConfig:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Key"])),
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = false,
+                        ValidateIssuerSigningKey = false,
                        // RoleClaimType = ClaimTypes.Role
                     };
                 });
@@ -180,7 +186,7 @@ namespace ARCN.API.Extensions
         {
             if (app.Environment.IsDevelopment())
             {
-                // Development-only middleware
+                app.UseDeveloperExceptionPage();
             }
             app.UseSwagger();
             app.UseSwaggerUI();

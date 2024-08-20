@@ -15,5 +15,7 @@ namespace ARCN.Application.Interfaces.Services
         ValueTask<ResponseModel<Journals>> GetJournalsById(int Journalsid);
         ValueTask<ResponseModel<Journals>> UpdateJournalsAsync(int Journalsid, JournalsDataModel model);
         ValueTask<ResponseModel<string>> DeleteJournalsAsync(int Journalsid);
+        double GetAllJournalPreviousTotal();
+        double GetAllJournalTotal();
     }
 }

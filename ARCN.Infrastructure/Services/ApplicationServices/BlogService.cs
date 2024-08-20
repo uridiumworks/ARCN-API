@@ -21,7 +21,6 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         private readonly IUserprofileService userprofileService;
         private readonly IUserIdentityService userIdentityService;
         private readonly IMapper mapper;
-
         public BlogService(
             IBlogRepository blogRepository,
             IUnitOfWork unitOfWork,
@@ -40,30 +39,31 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         {
             try
             {
-
-            //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-            //if (user == null)
-            //{
-            //    return new ResponseModel<string>
-            //    {
-            //        Success = false,
-            //        Message = "User not found",
-            //    };
-            //}
-
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Blog>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                        StatusCode = 404
+                    };
+                }
+                model.UserProfileId = userIdentityService.UserId;
                 var result= await blogRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
 
-                return new ResponseModel<Blog> { Success = true, Message = "Successfully submitted", Data = result };
+                return new ResponseModel<Blog> { Success = true, Message = "Successfully submitted", Data = result, StatusCode = 200 };
 
             }
             catch (Exception ex)
             {
-
+               // logger.LogError(ex.Message, "Blog");
                 return new ResponseModel<Blog>
                 {
                     Success = false,
                     Message = "Fail to insert",
+                    StatusCode = 500
                 };
             }
         }
@@ -90,15 +90,16 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             try
             {
 
-                //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-                //if (user == null)
-                //{
-                //    return new ResponseModel<string>
-                //    {
-                //        Success = false,
-                //        Message = "User not found",
-                //    };
-                //}
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Blog>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                        StatusCode = 404
+                    };
+                }
                 var blogs = await blogRepository.FindByIdAsync(blogid);
                 if (blogs != null)
                 {
@@ -110,7 +111,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "Updated successfully",
-                        Data=res
+                        Data=res,
+                        StatusCode = 200
                     };
                 }
                 else
@@ -118,7 +120,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     return new ResponseModel<Blog>
                     {
                         Success = false,
-                        Message = "Update Failed",
+                        Message = "Record Not Found",
+                        StatusCode = 404
                     };
                 }
             }
@@ -128,7 +131,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<Blog>
                 {
                     Success = false,
-                    Message = "Fail to insert",
+                    Message = ex.Message,
+                    StatusCode = 500
                 };
             }
         }
@@ -138,15 +142,16 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             try
             {
 
-                //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-                //if (user == null)
-                //{
-                //    return new ResponseModel<string>
-                //    {
-                //        Success = false,
-                //        Message = "User not found",
-                //    };
-                //}
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<string>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                        StatusCode = 404
+                    };
+                }
                 var blogs = await blogRepository.FindByIdAsync(blogid);
                 if (blogs != null)
                 {
@@ -156,6 +161,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "Blog Deleted  successfully",
+                        StatusCode = 200
                     };
                 }
                 else
@@ -163,7 +169,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     return new ResponseModel<string>
                     {
                         Success = false,
-                        Message = "Failed to delete",
+                        Message = "Record Not Found",
+                        StatusCode = 404
                     };
                 }
             }
@@ -173,7 +180,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<string>
                 {
                     Success = false,
-                    Message = "Fail to Delete",
+                    Message = ex.Message,
+                    StatusCode = 500
                 };
             }
         }

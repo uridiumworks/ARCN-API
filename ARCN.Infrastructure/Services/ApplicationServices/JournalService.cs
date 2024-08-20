@@ -40,23 +40,25 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             try
             {
 
-            //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-            //if (user == null)
-            //{
-            //    return new ResponseModel<string>
-            //    {
-            //        Success = false,
-            //        Message = "User not found",
-            //    };
-            //}
-
-               var result= await journalRepository.AddAsync(model, cancellationToken);
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<Journals>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                        StatusCode = 404
+                    };
+                }
+                model.UserProfileId = user.Id;
+                var result= await journalRepository.AddAsync(model, cancellationToken);
                 unitOfWork.SaveChanges();
                 return new ResponseModel<Journals>
                 {
                     Success = true,
                     Message = "successfully submitted",
-                    Data= result
+                    Data= result,
+                    StatusCode=200
                 };
 
             }
@@ -67,6 +69,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = false,
                     Message = "Fail to insert",
+                    StatusCode=400
                 };
             }
         }
@@ -88,41 +91,35 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
             return ResponseModel<Journals>.SuccessMessage(data: Journalss);
         }
+        public double GetAllJournalTotal()
+        {
+            var journal = journalRepository.FindAll().Where(x => x.CreatedDate < DateTime.Now.Date.AddMonths(-1)).Count();
+            return journal;
+        }
+        public double GetAllJournalPreviousTotal()
+        {
+            var journal = journalRepository.FindAll().Where(x => x.CreatedDate > DateTime.Now.Date.AddMonths(-1)).Count();
+            return journal;
+        }
         public async ValueTask<ResponseModel<Journals>> UpdateJournalsAsync(int Journalsid, JournalsDataModel model)
         {
             try
             {
 
-                //var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
-                //if (user == null)
-                //{
-                //    return new ResponseModel<Journals>
-                //    {
-                //        Success = false,
-                //        Message = "User not found",
-                //    };
-                //}
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                     return new ResponseModel<Journals>{ Success = false,Message = "User not found",StatusCode=404};
+
                 var Journalss = await journalRepository.FindByIdAsync(Journalsid);
                 if (Journalss != null)
                 {
                     mapper.Map(model, Journalss);
-                  var result=  journalRepository.Update(Journalss);
+                    var result=  journalRepository.Update(Journalss);
                     unitOfWork.SaveChanges();
-                    return new ResponseModel<Journals>
-                    {
-                        Success = true,
-                        Message = "Update successfully submitted",
-                        Data=result
-                    };
+                    return new ResponseModel<Journals>{ Success = true,Message = "Update successfully submitted", Data=result,StatusCode=200};
                 }
                 else
-                {
-                    return new ResponseModel<Journals>
-                    {
-                        Success = false,
-                        Message = "Update Failed",
-                    };
-                }
+                    return new ResponseModel<Journals>{Success = false, Message = "Record Not found",StatusCode= 404 };
             }
             catch (Exception ex)
             {
@@ -131,6 +128,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = false,
                     Message = "Fail to insert",
+                    StatusCode = 400
                 };
             }
         }
@@ -143,11 +141,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
                 if (user == null)
                 {
-                    return new ResponseModel<string>
-                    {
-                        Success = false,
-                        Message = "User not found",
-                    };
+                    return new ResponseModel<string> {Success = false, Message = "User not found", StatusCode= 404 };
                 }
                 var Journalss = await journalRepository.FindByIdAsync(Journalsid);
                 if (Journalss != null)
@@ -158,6 +152,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "Journals Deleted  successfully",
+                        StatusCode= 200
                     };
                 }
                 else
@@ -166,6 +161,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "Failed to delete",
+                        StatusCode= 404
                     };
                 }
             }
@@ -176,6 +172,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 {
                     Success = false,
                     Message = "Fail to Delete",
+                    StatusCode= 400
                 };
             }
         }

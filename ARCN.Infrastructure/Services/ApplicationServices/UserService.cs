@@ -1,90 +1,50 @@
 ﻿
 
 using System.Globalization;
-using ARCN.Application.DataModels.Identity;
 using ARCN.Application.DataModels.UserProfile;
 using ARCN.Application.Interfaces;
 using ARCN.Application.Interfaces.Services;
-using ARCN.Domain.Commons.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-
 
 namespace ARCN.Infrastructure.Services.ApplicationServices
 {
     public class UserService : IUserService
     {
-
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly ILogger<UserService> logger;
-        private readonly ITokenService tokenService;
         private readonly ARCNDbContext context;
         private readonly IMapper mapper;
+        private readonly ITokenService tokenService;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IPasswordHasher<ApplicationUser> passwordHasher;
 
         public UserService(
-            UserManager<ApplicationUser> userManager, 
+            UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            ILogger<UserService> logger, ITokenService tokenService, ARCNDbContext context, IMapper mapper)
+            ILogger<UserService> logger,
+            ARCNDbContext context,
+            IMapper mapper,
+            ITokenService tokenService,
+            IUnitOfWork unitOfWork,
+            IConfiguration configuration,
+            IPasswordHasher<ApplicationUser> passwordHasher)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.logger = logger;
-            this.tokenService = tokenService;
             this.context = context;
             this.mapper = mapper;
+            this.tokenService = tokenService;
+            this.unitOfWork = unitOfWork;
+            this.passwordHasher = passwordHasher;
         }
-        public async ValueTask AddUserClaimsAsync(ApplicationUser user)
+        public async ValueTask AddUserClaimsAsync(ApplicationUser user, List<Claim> claims)
         {
             try
             {
-                if (user!=null)
-                {
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.MobilePhone, user?.PhoneNumber),
-                        new Claim(ClaimTypes.NameIdentifier, user.Id),
-                        new Claim("lastName",  user.LastName),
-                        new Claim("ComfrimPhoneNumber",user.PhoneNumberConfirmed.ToString()),
-
-                    };
-                    await userManager.AddClaimsAsync(user, claims);
-
-                }
-                else
-                {
-                    #region Roles and Permission addUp
-                    var userClaim = await userManager.GetClaimsAsync(user);
-                    var roles = await userManager.GetRolesAsync(user);
-
-                    var roleClaim = new List<Claim>();
-                    var permissionClaim = new List<Claim>();
-
-                    foreach (var role in roles)
-                    {
-                        roleClaim.Add(new Claim(ClaimTypes.Role, role));
-                        var currentRole = await roleManager.FindByNameAsync(role);
-                        var allPermissionForCurrentRole = await roleManager.GetClaimsAsync(currentRole);
-                        permissionClaim.AddRange(allPermissionForCurrentRole);
-
-                    }
-
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.MobilePhone, user?.PhoneNumber),
-                        new Claim(ClaimTypes.NameIdentifier, user.Id),
-                        new Claim("email", user.Email),
-                    }
-                    .Union(userClaim)
-                    .Union(roleClaim)
-                    .Union(permissionClaim);
-                    #endregion
-
-
-                    await userManager.AddClaimsAsync(user, claims);
-
-                }
-
+                await userManager.AddClaimsAsync(user, claims);
             }
             catch (Exception ex)
             {
@@ -92,243 +52,84 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             }
         }
 
-        public async ValueTask<UserResponseDataModel> AdminUserResponses(ApplicationUser user)
+        public async ValueTask<(IdentityResult, ApplicationUser?)> CreateOrUpdateUserAsync(ApplicationUser applicationUser, string password)
         {
-            var registeredModel = new UserResponseDataModel
+            var existingUser = await userManager.Users.FirstOrDefaultAsync(x => x.Email == applicationUser.Email);
+
+            if (existingUser != null)
             {
-                FirstName=user.FirstName,
-                LastName=user.LastName,
-                PhoneNumber = user.PhoneNumber,
-                Email = user.Email,
-                UserName=user.UserName,
-                Token = await tokenService.CreateTokenAsync(user)
+                existingUser.UpdateUser(applicationUser);
+                var updateResult = await userManager.UpdateAsync(existingUser);
+                if (!updateResult.Succeeded)
+                {
+                    return (updateResult, null);
+                }
 
-            };
+                if (!string.IsNullOrEmpty(password))
+                {
+                    var token = await userManager.GeneratePasswordResetTokenAsync(existingUser);
+                    var passwordResult = await userManager.ResetPasswordAsync(existingUser, token, password);
 
-            return registeredModel;
+                    if (!passwordResult.Succeeded)
+                    {
+                        return (passwordResult, null);
+                    }
+                }
+                await unitOfWork.SaveChangesAsync();
+                return (IdentityResult.Success, existingUser);
+            }
+            var result = await userManager.CreateAsync(applicationUser, password);
+            return (result, applicationUser);
         }
-       
 
-        public async ValueTask<string> GenerateNewToken(ApplicationUser user)
+
+        public async ValueTask<UserResponseDataModel> UserResponses(ApplicationUser user)
         {
-            return await tokenService.CreateTokenAsync(user);
-        }
 
-        public async ValueTask<List<RoleClaimResponseDataModel>> GetAllRoleClaims()
-        {
-            var roles = await roleManager.Roles.ToListAsync();
+            logger.LogInformation("generating access token for user {0}", user.Email);
+            var userClaim = await userManager.GetClaimsAsync(user);
+            var roles = await userManager.GetRolesAsync(user);
 
-            var rolesAndClaims = new List<RoleClaimResponseDataModel>();
+            var roleClaim = new List<Claim>();
+            var permissionClaim = new List<Claim>();
+            var permissions = new List<string>();
+
             foreach (var role in roles)
             {
-
-                var allPermissions = AppPermissions.AllPermissions;
-                var roleclaimRes = new RoleClaimResponseDataModel
-                {
-                    Role = new()
-                    {
-                        Id = role.Id,
-                        Name = role.Name,
-                        //Description = role.Description
-                    },
-
-                    RoleClaims = new()
-
-                };
-
-                var currentRoleClaim = await GetAllClaimsForRoleAsync(role.Id);
-                var allPermissionsName = allPermissions.Select(x => x.Name).ToList();
-                var currentClaimValues = currentRoleClaim.Select(c => c.ClaimValue).ToList();
-
-                var currentlyAssignedRoleClaimsNames = allPermissionsName.Intersect(currentClaimValues).ToList();
-
-                foreach (var item in allPermissions)
-                {
-                    if (currentlyAssignedRoleClaimsNames.Any(c => c == item.Name))
-                    {
-                        roleclaimRes.RoleClaims.Add(new RoleClaimDataModel
-                        {
-                            RoleId = role.Id,
-                            ClaimType = AppClaim.Permission,
-                            Description = item.description,
-                            ClaimValue = item.Name,
-                            Group = item.group,
-                            IsAssignedToRole = true
-                        });
-                    }
-                    else
-                    {
-                        roleclaimRes.RoleClaims.Add(new RoleClaimDataModel
-                        {
-                            RoleId = role.Id,
-                            ClaimType = AppClaim.Permission,
-                            Description = item.description,
-                            ClaimValue = item.Name,
-                            Group = item.group,
-                            IsAssignedToRole = false
-                        });
-                    }
-
-
-                }
-
-                rolesAndClaims.Add(roleclaimRes);
+                roleClaim.Add(new Claim(ClaimTypes.Role, role));
+                var currentRole = await roleManager.FindByNameAsync(role);
+                var allPermissionForCurrentRole = await roleManager.GetClaimsAsync(currentRole);
+                permissionClaim.AddRange(allPermissionForCurrentRole);
+                permissions.AddRange(allPermissionForCurrentRole.Select(c => c.Value));
             }
 
-            return rolesAndClaims;
-
-        }
-
-        public async ValueTask<RoleClaimResponseDataModel> GetPermissionAsync(string roleId)
-        {
-            var roleInDb = await roleManager.FindByIdAsync(roleId);
-
-            if (roleInDb is not null)
+            var res = new UserResponseDataModel
             {
-                var allPermissions = AppPermissions.AllPermissions;
-                var roleclaimRes = new RoleClaimResponseDataModel
-                {
-                    Role = new()
-                    {
-                        Id = roleInDb.Id,
-                        Name = roleInDb.Name,
-                        //Description = roleInDb.Description
-                    },
+                FirstName = user?.FirstName,
+                LastName = user?.LastName,
+                Email = user?.Email,
+                PhoneNumber = user?.PhoneNumber,
+                UserName = user?.UserName,
+                RefreshToken = user?.RefreshToken,
+                Token = await tokenService.CreateTokenAsync(user),
+                // Assign roles and permissions
+                Roles = roles.ToList(),
+                Permissions = permissions.Distinct().ToList()
+            };
 
-                    RoleClaims = new()
-
-                };
-
-                var currentRoleClaim = await GetAllClaimsForRoleAsync(roleId);
-                var allPermissionsName = allPermissions.Select(x => x.Name).ToList();
-                var currentClaimValues = currentRoleClaim.Select(c => c.ClaimValue).ToList();
-
-                var currentlyAssignedRoleClaimsNames = allPermissionsName.Intersect(currentClaimValues).ToList();
-
-                foreach (var item in allPermissions)
-                {
-                    if (currentlyAssignedRoleClaimsNames.Any(c => c == item.Name))
-                    {
-                        roleclaimRes.RoleClaims.Add(new RoleClaimDataModel
-                        {
-                            RoleId = roleId,
-                            ClaimType = AppClaim.Permission,
-                            Description = item.description,
-                            ClaimValue = item.Name,
-                            Group = item.group,
-                            IsAssignedToRole = true
-                        });
-                    }
-                    else
-                    {
-                        roleclaimRes.RoleClaims.Add(new RoleClaimDataModel
-                        {
-                            RoleId = roleId,
-                            ClaimType = AppClaim.Permission,
-                            Description = item.description,
-                            ClaimValue = item.Name,
-                            Group = item.group,
-                            IsAssignedToRole = false
-                        });
-                    }
-                }
-
-                return roleclaimRes;
-
-            }
-
-            return null;
+            return res;
         }
 
-        private async ValueTask<List<RoleClaimDataModel>> GetAllClaimsForRoleAsync(string roleId)
+        public ApplicationUser CreateNewUser(NewUserDataModel userData, bool IsNewUser)
         {
-            var roleclaims = await context.RoleClaims.Where(x => x.RoleId == roleId).ToListAsync();
-
-            if (roleclaims.Count > 0)
+            return new ApplicationUser
             {
-                var mappRoleClaim = mapper.Map<List<RoleClaimDataModel>>(roleclaims);
-                return mappRoleClaim;
-            }
-
-            return new List<RoleClaimDataModel>();
-        }
-
-        public async ValueTask<List<ApplicationRoleClaim>> GetAllClaims()
-        {
-            var claims = await context.RoleClaims.ToListAsync();
-
-            return claims;
-        }
-
-        public async ValueTask<List<RoleClaimDataModel>> GetAllUnAssignedClaims()
-        {
-            var allPermissions = AppPermissions.AllPermissions;
-            var roleclaims = new List<RoleClaimDataModel>();
-            foreach (var item in allPermissions)
-            {
-                var claim = new RoleClaimDataModel
-                {
-                    ClaimType = AppClaim.Permission,
-                    Description = item.description,
-                    ClaimValue = item.Name,
-                    Group = item.group,
-                    IsAssignedToRole = false
-                };
-                roleclaims.Add(claim);
-            }
-
-            return roleclaims;
-        }
-
-        public async ValueTask AddPermissionToRole(List<RoleClaimDataModel> roleClaimDataModels, string roleId)
-        {
-            foreach (var claim in roleClaimDataModels)
-            {
-                if (claim.IsAssignedToRole)
-                {
-                    var appRoleClaim = new ApplicationRoleClaim
-                    {
-                        RoleId = roleId,
-                        ClaimType = claim.ClaimType,
-                        ClaimValue = claim.ClaimValue,
-                        Description = claim.Description,
-                        Group = claim.Group
-                    };
-                    await context.RoleClaims.AddAsync(appRoleClaim);
-                }
-            }
-            context.SaveChanges();
-        }
-
-        public async ValueTask<bool> UpdatePermissionAsync(UpdateRolePermissionRequestDataModel datamodel)
-        {
-            var role = await roleManager.FindByIdAsync(datamodel.RoleId);
-
-            if (role != null)
-            {
-
-                var permissionToBeAssigned = datamodel.RoleClaims.Where(x => x.IsAssignedToRole).ToList();
-
-                var currentlyAssignedClaims = await roleManager.GetClaimsAsync(role);
-
-                foreach (var claim in currentlyAssignedClaims)
-                {
-                    await roleManager.RemoveClaimAsync(role, claim);
-                }
-
-                foreach (var claim in permissionToBeAssigned)
-                {
-                    var mapRoleClaim = mapper.Map<ApplicationRoleClaim>(claim);
-                    await context.RoleClaims.AddAsync(mapRoleClaim);
-
-
-                }
-                context.SaveChanges();
-                return true;
-            }
-
-            return false;
-
+                PhoneNumber = userData.PhoneNumber,
+                UserName = userData.Email,
+                Email = userData.Email,
+                FirstName = userData.FirstName,
+                LastName = userData.LastName
+            };
         }
 
     }

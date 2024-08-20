@@ -1,13 +1,14 @@
 ﻿
+using ARCN.Application.DataModels.ContentManagement;
 using AutoMapper;
 
 namespace ARCN.Application.AutoMaps
 {
-    public class BlogAutoMap : Profile
+    public class EventAutoMap : Profile
     {
-        public BlogAutoMap()
+        public EventAutoMap()
         {
-            CreateMap<BlogDataModel, Blog>().ReverseMap();
+            CreateMap<EventDataModel, Event>().ReverseMap();
         }
     }
 }

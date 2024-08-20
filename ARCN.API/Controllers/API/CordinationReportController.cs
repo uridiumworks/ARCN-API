@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 namespace ARCN.API.Controllers.API
 {
     [Route("api/[controller]")]
-    [AllowAnonymous]
     public class CordinationReportController : ODataController
     {
         private readonly ICordinationReportService cordinationReportService;
@@ -28,12 +27,12 @@ namespace ARCN.API.Controllers.API
             var result=await cordinationReportService.AddCordinationReportAsync(model,cancellationToken);
             if (result.Success)
             {
-                return Ok();
+                return StatusCode(result.StatusCode, result);
 
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
 
         }
@@ -44,12 +43,12 @@ namespace ARCN.API.Controllers.API
             var result = await cordinationReportService.UpdateCordinationReportAsync(key,CordinationReport);
             if (result.Success)
             {
-                return Ok();
+                return StatusCode(result.StatusCode, result);
 
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
         }
         [HttpDelete("Delete/{key}")]
@@ -58,12 +57,12 @@ namespace ARCN.API.Controllers.API
             var result = await cordinationReportService.DeleteCordinationReportAsync(key);
             if (result.Success)
             {
-                return Ok();
+                return StatusCode(result.StatusCode);
 
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
         }
 

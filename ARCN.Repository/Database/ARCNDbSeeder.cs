@@ -1,4 +1,5 @@
 ﻿
+using ARCN.Application.Interfaces.Services;
 using ARCN.Domain.Commons.Authorization;
 using Microsoft.Extensions.Logging;
 
@@ -10,14 +11,16 @@ namespace ARCN.Repository.Database
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly ARCNDbContext dbContext;
         private readonly ILogger<ARCNDbSeeder> logger;
+        private readonly ITokenService tokenService;
 
         public ARCNDbSeeder(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
-            ARCNDbContext dbContext, ILogger<ARCNDbSeeder> logger)
+            ARCNDbContext dbContext, ILogger<ARCNDbSeeder> logger, ITokenService tokenService)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.dbContext = dbContext;
             this.logger = logger;
+            this.tokenService = tokenService;
         }
 
         public async Task SeedDatabaseAsync()
@@ -115,16 +118,16 @@ namespace ARCN.Repository.Database
             string adminUserName = AppCredentials.Email[..AppCredentials.Email.IndexOf("@")].ToLowerInvariant();
             var adminUser = new ApplicationUser
             {
+                FirstName = "Admin",
+                LastName = "Admin",
                 Email = AppCredentials.Email,
+                PhoneNumber = "08080000000",
                 UserName = adminUserName,
+                RefreshToken = tokenService.GenerateRefreshToken(),
+                RefreshTokenExpiryDate = DateTime.Now.AddHours(24),
                 EmailConfirmed = true,
-                PhoneNumber = "08099999999",
                 PhoneNumberConfirmed = true,
-                NormalizedEmail = AppCredentials.Email.ToUpperInvariant(),
-                NormalizedUserName = adminUserName.ToUpperInvariant(),
                 IsAdmin = true,
-                FirstName="System",
-                LastName="System",
             };
 
             if (!await userManager.Users.AnyAsync(u => u.Email == AppCredentials.Email))

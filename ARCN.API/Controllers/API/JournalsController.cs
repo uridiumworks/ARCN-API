@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 namespace ARCN.API.Controllers.API
 {
     [Route("api/[controller]")]
-    [AllowAnonymous]
     public class JournalsController : ODataController
     {
         private readonly IJournalsService journalsService;
@@ -28,12 +27,12 @@ namespace ARCN.API.Controllers.API
             var result=await journalsService.AddJournalsAsync(model, cancellationToken);
             if (result.Success)
             {
-                return Ok(result);
+                return StatusCode(result.StatusCode,result);
 
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
 
         }
@@ -44,28 +43,28 @@ namespace ARCN.API.Controllers.API
             var result = await journalsService.UpdateJournalsAsync(key,Journals);
             if (result.Success)
             {
-                return Ok(result);
+                return StatusCode(result.StatusCode,result);
 
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode,result);
             }
         }
-        [HttpPut("Delete/{key}")]
+        [HttpDelete("Delete/{key}")]
         public async ValueTask<ActionResult<Journals>> Delete(int key)
         {
             var result = await journalsService.DeleteJournalsAsync(key);
             if (result.Success)
             {
-                return Ok();
+                return StatusCode(result.StatusCode);
 
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
         }
-
+        
     }
 }

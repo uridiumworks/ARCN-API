@@ -14,5 +14,7 @@ namespace ARCN.Application.Interfaces.Services
         ValueTask<ResponseModel<FCA>> GetFCAById(int FCAid);
         ValueTask<ResponseModel<FCA>> UpdateFCAAsync(int FCAid, FCADataModel model);
         ValueTask<ResponseModel<string>> DeleteFCAAsync(int FCAid);
+        double GetAllfcaPreviousTotal();
+        double GetAllfcaTotal();
     }
 }

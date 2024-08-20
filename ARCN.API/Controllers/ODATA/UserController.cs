@@ -1,5 +1,6 @@
 ﻿using ARCN.Application.Interfaces.Repositories;
 using ARCN.Application.Interfaces.Services;
+using ARCN.Infrastructure.Services.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Results;
@@ -16,46 +17,33 @@ namespace ARCN.API.Controllers.ODATA
     {
         private readonly IUserprofileService userprofileService;
         private readonly IUserProfileRepository userProfileRepository;
+        private readonly IUserSettingService userSettingService;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="userService"></param>
-        /// <param name="userRepository"></param>
-        public UserController(IUserprofileService userprofileService, IUserProfileRepository userProfileRepository)
+        public UserController(IUserprofileService userprofileService, IUserProfileRepository userProfileRepository,
+            IUserSettingService userSettingService)
         {
             this.userprofileService = userprofileService;
             this.userProfileRepository = userProfileRepository;
+            this.userSettingService = userSettingService;
         }
 
 
-
-        /// <summary>
-        /// Get All User Profile
-        /// </summary>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpGet("User")]
-        // [EnableQuery]
-        public ActionResult<List<ApplicationUser>> GetAll()
+        [HttpGet("GetAllUsers")]
+        public async ValueTask<ActionResult> GetAllUsers()
         {
-            var result = userProfileRepository.FindAll().ToList();
-
+            var result = await userSettingService.GetAllUsers();
             return Ok(result);
         }
 
         /// <summary>
-        /// Get One User Profile
+        /// Get Profile
         /// </summary>
-        /// <param name="key"></param>
         /// <returns></returns>
-
-        [HttpGet("User/{key}")]
-        [EnableQuery]
-        public ActionResult GetOne(string key)
+        [HttpGet("GetProfile")]
+        public async ValueTask<ActionResult> GetProfile()
         {
-            var result = userprofileService.GetAll().Where(x => x.Id == key);
-            return Ok(SingleResult.Create(result));
+            var result = await userSettingService.GetProfile();
+            return Ok(result);
         }
 
     }

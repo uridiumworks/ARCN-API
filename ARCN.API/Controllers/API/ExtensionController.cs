@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 namespace ARCN.API.Controllers.API
 {
     [Route("api/[controller]")]
-    [AllowAnonymous]
     public class ExtensionController : ODataController
     {
         private readonly IExtensionService ExtensionService;
@@ -27,12 +26,12 @@ namespace ARCN.API.Controllers.API
             var result=await ExtensionService.AddExtensionAsync(model, cancellationToken);
             if (result.Success)
             {
-                return Ok(result);
+                return StatusCode(result.StatusCode, result);
 
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
 
         }
@@ -43,12 +42,12 @@ namespace ARCN.API.Controllers.API
             var result = await ExtensionService.UpdateExtensionAsync(key,Extension);
             if (result.Success)
             {
-                return Ok(result);
+                return StatusCode(result.StatusCode, result);
 
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
         }
         [HttpDelete("Delete/{key}")]
@@ -57,12 +56,12 @@ namespace ARCN.API.Controllers.API
             var result = await ExtensionService.DeleteExtensionAsync(key);
             if (result.Success)
             {
-                return Ok();
+                return StatusCode(result.StatusCode);
 
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
         }
 

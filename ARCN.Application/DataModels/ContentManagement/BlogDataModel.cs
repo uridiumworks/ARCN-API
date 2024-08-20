@@ -9,8 +9,6 @@ namespace ARCN.Domain.Entities
 {
     public class BlogDataModel
     {
-
-        public string? UserProfileId { get; set; }
         public string? Title { get; set; }
         public string? Category { get; set; }
         public string? BannerUrl { get; set; }

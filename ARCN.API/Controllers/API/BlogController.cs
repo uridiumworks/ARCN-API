@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 namespace ARCN.API.Controllers.API
 {
     [Route("api/[controller]")]
-    [AllowAnonymous]
     public class BlogController : ODataController
     {
         private readonly IBlogService blogService;
@@ -27,12 +26,11 @@ namespace ARCN.API.Controllers.API
             var result=await blogService.AddBlogAsync(model, cancellationToken);
             if (result.Success)
             {
-                return Ok(result);
-
+                return StatusCode(result.StatusCode, result);
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
 
         }
@@ -43,12 +41,11 @@ namespace ARCN.API.Controllers.API
             var result = await blogService.UpdateBlogAsync(key,blog);
             if (result.Success)
             {
-                return Ok(result);
-
+                return StatusCode(result.StatusCode, result);
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
         }
         [HttpDelete("Delete/{key}")]
@@ -57,12 +54,11 @@ namespace ARCN.API.Controllers.API
             var result = await blogService.DeleteBlogAsync(key);
             if (result.Success)
             {
-                return Ok();
-
+                return StatusCode(result.StatusCode);
             }
             else
             {
-                return BadRequest();
+                return StatusCode(result.StatusCode, result);
             }
         }
 

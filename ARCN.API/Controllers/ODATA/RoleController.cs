@@ -17,12 +17,12 @@ namespace ARCN.API.Controllers.ODATA
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly ILogger<RoleController> logger;
-        private readonly IUserService userService;
+        private readonly IUserSettingService userService;
         private readonly IMapper mapper;
         private readonly IValidator<AddUserToRoleDataModel> validatorAddUserToRole;
 
         public RoleController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
-            ILogger<RoleController> logger, IUserService userService, IMapper mapper, IValidator<AddUserToRoleDataModel> validatorAddUserToRole)
+            ILogger<RoleController> logger, IUserSettingService userService, IMapper mapper, IValidator<AddUserToRoleDataModel> validatorAddUserToRole)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
@@ -47,37 +47,14 @@ namespace ARCN.API.Controllers.ODATA
 
             return Ok(role);
         }
-
-        [HttpPost("Role")]
-        public async ValueTask<ActionResult<IdentityRole>> Post([FromBody] RoleDataModel role)
-        {
-
-            if (string.IsNullOrEmpty(role.Name) || role == null) return BadRequest();
-
-            if (!await roleManager.RoleExistsAsync(role.Name.Trim()))
-            {
-                var result = await roleManager.CreateAsync(new IdentityRole { Name = role.Name });
-                if (result.Succeeded)
-                {
-                    var roleData = await roleManager.FindByNameAsync(role.Name);
-
-                    await userService.AddPermissionToRole(role.RoleClaims, roleData.Id);
-                    return Ok(roleData);
-                }
-            }
-
-            return BadRequest();
-
-        }
-
        
 
         [HttpGet("GetRolesClaims")]
         public async ValueTask<ActionResult<List<RoleClaimResponseDataModel>>> GetRolesClaims()
         {
-            var RoleClaims = await userService.GetAllRoleClaims();
+            var roleClaims = await userService.GetAllRoleClaims();
 
-            return RoleClaims;
+            return Ok(roleClaims);
 
 
         }
@@ -87,7 +64,7 @@ namespace ARCN.API.Controllers.ODATA
         {
             var RoleClaims = await userService.GetAllUnAssignedClaims();
 
-            return RoleClaims;
+            return Ok(RoleClaims);
 
 
         }
@@ -97,7 +74,7 @@ namespace ARCN.API.Controllers.ODATA
         {
             var RoleClaims = await userService.GetPermissionAsync(roleId);
 
-            return RoleClaims;
+            return Ok(RoleClaims);
 
 
         }

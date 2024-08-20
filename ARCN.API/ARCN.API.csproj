@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\Customer\**" />
-    <Content Remove="Controllers\Customer\**" />
-    <EmbeddedResource Remove="Controllers\Customer\**" />
-    <None Remove="Controllers\Customer\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Controllers\API\UserProfileController.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -40,6 +40,16 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         {
             try
             {
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<FCA>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
+                model.UserProfileId=user.Id;
                 var result= await FCARepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
 
@@ -74,10 +84,29 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
             return ResponseModel<FCA>.SuccessMessage(data: FCAs);
         }
+        public double GetAllfcaTotal()
+        {
+            var fca = FCARepository.FindAll().Where(x => x.CreatedDate < DateTime.Now.Date.AddMonths(-1)).Count();
+            return fca;
+        }
+        public double GetAllfcaPreviousTotal() 
+        {
+            var fca = FCARepository.FindAll().Where(x => x.CreatedDate > DateTime.Now.Date.AddMonths(-1)).Count();
+            return fca;
+        }
         public async ValueTask<ResponseModel<FCA>> UpdateFCAAsync(int FCAid, FCADataModel model)
         {
             try
             {
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<FCA>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
                 var FCAs = await FCARepository.FindByIdAsync(FCAid);
                 if (FCAs != null)
                 {
@@ -116,7 +145,15 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         {
             try
             {
-
+                var user = await userProfileRepository.FindByIdAsync(userIdentityService.UserId);
+                if (user == null)
+                {
+                    return new ResponseModel<string>
+                    {
+                        Success = false,
+                        Message = "User not found",
+                    };
+                }
                 var FCAs = await FCARepository.FindByIdAsync(FCAid);
                 if (FCAs != null)
                 {
