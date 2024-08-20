@@ -243,3 +243,5 @@
 /ARCN.Domain/obj/Debug/net8.0/ARCN.Domain.GeneratedMSBuildEditorConfig.editorconfig
 /ARCN.UnitTest/obj/Debug/net8.0/ARCN.UnitTest.GeneratedMSBuildEditorConfig.editorconfig
 /ARCN.UnitTest/obj/Debug/net8.0/ARCN.UnitTest.assets.cache
+/ARCN.Repository/obj/Debug/net8.0/ARCN.Repository.AssemblyInfo.cs
+/ARCN.UnitTest/obj/Debug/net8.0/ARCN.UnitTest.AssemblyInfo.cs
