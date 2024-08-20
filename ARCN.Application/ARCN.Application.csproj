@@ -9,6 +9,7 @@
   <ItemGroup>
     <Compile Remove="Interfaces\Repositories\ISecurityQuestionAnswerRepository.cs" />
     <Compile Remove="Interfaces\Repositories\ISecurityQuestionRepository.cs" />
+    <Compile Remove="Interfaces\Services\ITokenManager.cs" />
   </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="13.0.1" />

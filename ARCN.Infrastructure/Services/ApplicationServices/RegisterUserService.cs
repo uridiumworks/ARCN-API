@@ -65,7 +65,17 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
             var user = await userManager.FindByEmailAsync(loginDataModel.Email);
             if (user == null) throw new ValidationException($"User with email: {loginDataModel.Email} is not profile yet.");
+            PasswordVerificationResult result = userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, loginDataModel.Password);
 
+            if (result != PasswordVerificationResult.Success)
+            {
+                return new ResponseModel<UserResponseDataModel>
+                {
+                    Success = false,
+                    Message = "Incorrect Password",
+                    StatusCode = 400
+                };
+            }
             user = await userProfileRepository.FindAll().Where(x => x.Id == user.Id).FirstOrDefaultAsync();
 
             if (!(user.Email == AppCredentials.Email))
@@ -117,11 +127,11 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     StatusCode = 400
                 };
             }
-            var token = resetPassword.Token;
-            byte[] decodeToken = WebEncoders.Base64UrlDecode(token);
-            var tokenstr = Encoding.UTF8.GetString(decodeToken);
+            //var token = resetPassword.Token;
+            //byte[] decodeToken = WebEncoders.Base64UrlDecode(token);
+            //var tokenstr = Encoding.UTF8.GetString(decodeToken);
 
-            var resp = await userManager.ResetPasswordAsync(user, tokenstr, resetPassword.ConfirmPassword);
+            var resp = await userManager.ChangePasswordAsync(user, resetPassword.CurrentPassword, resetPassword.ConfirmPassword);
             if (resp.Succeeded)
             {
                 return new ResponseModel<UserResponseDataModel>
