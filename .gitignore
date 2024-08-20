@@ -251,3 +251,5 @@
 /ARCN.Application/ARCN.Application.csproj
 /ARCN.API/Logs/log_006.txt
 *.txt
+/ARCN.Repository/obj/Debug/net8.0/ARCN.Repository.AssemblyInfo.cs
+/ARCN.UnitTest/obj/Debug/net8.0/ARCN.UnitTest.AssemblyInfo.cs
