@@ -45,9 +45,9 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     response.Name = uploadResult.DisplayName;
                 }
             }
-            catch
+            catch(Exception ex)
             {
-                //logger.LogError($"Unhandled Exception. ID: {ex.StackTrace} - Message: {ex.Message}");
+                logger.LogError($"Unhandled Exception. ID: {ex.StackTrace} - Message: {ex.Message}");
                 // response.Status = $"Unexpected error: {ex.StackTrace}. Check log with StackTrace ID.";
                 return default;
             }
@@ -74,10 +74,10 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     response.Name = uploadResult.DisplayName;
                 }
             }
-            catch
+            catch(Exception ex)
             {
-                //logger.LogError($"Unhandled Exception. ID: {ex.StackTrace} - Message: {ex.Message}");
-                //response.Status = $"Unexpected error: {ex.StackTrace}. Check log with StackTrace ID.";
+                logger.LogError($"Unhandled Exception. ID: {ex.StackTrace} - Message: {ex.Message}");
+                response.Status = $"Unexpected error: {ex.StackTrace}. Check log with StackTrace ID.";
                 return default;
             }
             return response;
