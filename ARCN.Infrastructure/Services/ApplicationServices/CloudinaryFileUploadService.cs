@@ -3,9 +3,7 @@ using ARCN.Application.Interfaces.Services;
 
 namespace ARCN.Infrastructure.Services.ApplicationServices
 {
-    /// <summary>
-    /// Upload File Using Cloudinary
-    /// </summary>
+
     public class CloudinaryFileUploadService : ICloudinaryFileUploadService
     {
         private readonly Cloudinary cloudinary;
