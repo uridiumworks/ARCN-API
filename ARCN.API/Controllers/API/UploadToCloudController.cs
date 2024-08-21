@@ -53,17 +53,17 @@ namespace ARCN.API.Controllers.API
                 ModelState.AddModelError("UploadToCloud", "Folder Name Not Valid");
                 return ValidationProblem(instance: "100", modelStateDictionary: ModelState);
             }
-            //var result = await fileUploadService.UploadAsync(objFile);
-            //if (result.Status != "Successful")
-            //{
+            var result = await fileUploadService.UploadAsync(objFile);
+            if (result.Status != "Successful")
+            {
 
-            //    ModelState.AddModelError("UploadToCloud", result.Status);
-            //    return ValidationProblem(instance: "100", modelStateDictionary: ModelState);
-            //}
+                ModelState.AddModelError("UploadToCloud", result.Status);
+                return ValidationProblem(instance: "100", modelStateDictionary: ModelState);
+            }
 
-           // logger.LogInformation("FileUploaded successfully with new image url -  {0}", result.Uri);
+            logger.LogInformation("FileUploaded successfully with new image url -  {0}", result.Uri);
 
-            //return Ok(result.Uri);
+            return Ok(result.Uri);
             return Ok();
         }
 
