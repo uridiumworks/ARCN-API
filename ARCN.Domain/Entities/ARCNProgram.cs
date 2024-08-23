@@ -12,12 +12,14 @@ namespace ARCN.Domain.Entities
 
         public int ARCNProgramId { get; set; }
         public string? UserProfileId { get; set; }
-        public string? Title { get; set; }
+        public string? Subject { get; set; }
         public string? BannerUrl { get; set; }
         public string? Description { get; set; }
-        public string? PublisherName { get; set; }
-        public DateTime? PublishOn { get; set; }
-        public bool? UseBanner { get; set; }
+        public string? Venue { get; set; }
+        public string? Author { get; set; }
+        public DateTime? EventStartDate { get; set; }
+        public DateTime? EventEndDate { get; set; }
+        public string? DurationPerDay { get; set; }
         public virtual ApplicationUser? ApplicationUser { get; set; }
 
     }

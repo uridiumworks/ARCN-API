@@ -64,7 +64,6 @@ namespace ARCN.API.Controllers.API
             logger.LogInformation("FileUploaded successfully with new image url -  {0}", result.Uri);
 
             return Ok(result.Uri);
-            return Ok();
         }
 
 
