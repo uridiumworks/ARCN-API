@@ -22,8 +22,8 @@ namespace ARCN.Domain.Entities.Map
                 .HasColumnName("UserProfileId")
                 .IsRequired();
 
-            builder.Property(p => p.Title)
-                .HasColumnName("Title")
+            builder.Property(p => p.Subject)
+                .HasColumnName("Subject")
                  .HasMaxLength(250)
                 .IsRequired(false);
 
@@ -36,20 +36,22 @@ namespace ARCN.Domain.Entities.Map
                 .HasColumnName("Description")
                 .IsRequired(false);
 
-            builder.Property(p => p.PublisherName)
-               .HasColumnName("PublisherName")
+            builder.Property(p => p.Author)
+               .HasColumnName("Author")
                 .HasMaxLength(450)
                .IsRequired(false);
 
-            builder.Property(p => p.UseBanner)
-               .HasColumnName("UseBanner")
-               .IsRequired(false);
-
-
-
-            builder.Property(p => p.PublishOn)
-                .HasColumnName("PublishOn")
+            builder.Property(p => p.Venue)
+                .HasColumnName("Venue")
                 .IsRequired(false);
+
+            builder.Property(p => p.EventStartDate)
+                .HasColumnName("EventStartDate")
+                .IsRequired(false);
+
+            builder.Property(p => p.EventEndDate)
+               .HasColumnName("EventEndDate")
+               .IsRequired(false);
 
 
             #endregion

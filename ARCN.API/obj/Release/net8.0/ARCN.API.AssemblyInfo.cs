@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ARCN.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+320f7dfd0e0e73c9a5db76f70a0980c0eaeb26b9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c19519f4a49bf17b115f285591528562a2998f7d")]
 [assembly: System.Reflection.AssemblyProductAttribute("ARCN.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ARCN.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
