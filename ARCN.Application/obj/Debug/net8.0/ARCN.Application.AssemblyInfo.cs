@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ARCN.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c19519f4a49bf17b115f285591528562a2998f7d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3ffb0040bc569711e1b28c921ef8f7f69f12e9be")]
 [assembly: System.Reflection.AssemblyProductAttribute("ARCN.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ARCN.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
