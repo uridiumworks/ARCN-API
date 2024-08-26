@@ -47,13 +47,19 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode=404
                     };
                 }
                 model.UserProfileId=user.Id;
                 var result= await FCARepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
 
-                return new ResponseModel<FCA> { Success = true, Message = "Successfully submitted", Data = result };
+                return new ResponseModel<FCA> {
+                    Success = true,
+                    Message = "Successfully submitted",
+                    Data = result,
+                    StatusCode = 200
+                };
 
             }
             catch (Exception ex)
@@ -62,7 +68,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<FCA>
                 {
                     Success = false,
-                    Message = "Fail to insert",
+                    Message = ex.Message,
+                    StatusCode = 500
                 };
             }
         }
@@ -105,6 +112,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode = 404
                     };
                 }
                 var FCAs = await FCARepository.FindByIdAsync(FCAid);
@@ -118,7 +126,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "Updated successfully",
-                        Data=res
+                        Data=res,
+                        StatusCode = 200
                     };
                 }
                 else
@@ -127,6 +136,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "Update Failed",
+                        StatusCode = 404
                     };
                 }
             }
@@ -136,7 +146,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<FCA>
                 {
                     Success = false,
-                    Message = "Fail to insert",
+                    Message = ex.Message,
+                    StatusCode = 500
                 };
             }
         }
@@ -152,6 +163,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "User not found",
+                        StatusCode = 404
                     };
                 }
                 var FCAs = await FCARepository.FindByIdAsync(FCAid);
@@ -163,6 +175,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = true,
                         Message = "FCA Deleted  successfully",
+                        StatusCode = 200
                     };
                 }
                 else
@@ -171,6 +184,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     {
                         Success = false,
                         Message = "Failed to delete",
+                        StatusCode = 404
                     };
                 }
             }
@@ -180,7 +194,8 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                 return new ResponseModel<string>
                 {
                     Success = false,
-                    Message = "Fail to Delete",
+                    Message = ex.Message,
+                    StatusCode = 500
                 };
             }
         }

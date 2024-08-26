@@ -12,19 +12,19 @@ namespace ARCN.API.Controllers.API
     [Route("api/[controller]")]
     public class EventController : ODataController
     {
-        private readonly IEventService EventService;
+        private readonly IEventService eventService;
         private readonly ILogger<EventController> logger;
 
-        public EventController(IEventService EventService, ILogger<EventController> logger)
+        public EventController(IEventService eventService, ILogger<EventController> logger)
         {
-            this.EventService = EventService;
+            this.eventService = eventService;
             this.logger = logger;
         }
         [HttpPost("CreateEvent")]
         public async ValueTask<ActionResult<Event>> Post([FromBody] Event model,CancellationToken cancellationToken)
         {
 
-            var result=await EventService.AddEventAsync(model, cancellationToken);
+            var result=await eventService.AddEventAsync(model, cancellationToken);
             if (result.Success)
             {
                 return StatusCode(result.StatusCode, result);
@@ -40,7 +40,7 @@ namespace ARCN.API.Controllers.API
         [HttpPut("UpdateEvent/{key}")]
         public async ValueTask<ActionResult<Event>> Put(int key, [FromBody] EventDataModel Event)
         {
-            var result = await EventService.UpdateEventAsync(key,Event);
+            var result = await eventService.UpdateEventAsync(key,Event);
             if (result.Success)
             {
                 return StatusCode(result.StatusCode, result);
@@ -54,7 +54,7 @@ namespace ARCN.API.Controllers.API
         [HttpDelete("Delete/{key}")]
         public async ValueTask<ActionResult<Event>> Delete(int key)
         {
-            var result = await EventService.DeleteEventAsync(key);
+            var result = await eventService.DeleteEventAsync(key);
             if (result.Success)
             {
                 return StatusCode(result.StatusCode);
