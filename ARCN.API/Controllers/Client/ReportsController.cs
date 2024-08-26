@@ -30,7 +30,7 @@ namespace ARCN.API.Controllers.Client
         {
 
             var result = reportsRepository.FindAll();
-            return Ok();
+            return Ok(result);
 
         }
 
