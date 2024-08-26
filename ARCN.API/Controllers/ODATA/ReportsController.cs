@@ -30,7 +30,7 @@ namespace ARCN.API.Controllers.ODATA
         {
 
             var result =  reportsRepository.FindAll();
-                return Ok();
+                return Ok(result);
 
         }
 
