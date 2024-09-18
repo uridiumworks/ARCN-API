@@ -18,6 +18,8 @@ namespace ARCN.Domain.Entities
         public string? AuthorName { get; set; }
         public DateTime? EventStartDate { get; set; }
         public DateTime? EventEndDate { get; set; }
+        public TimeSpan? EventStartTime { get; set; }
+        public TimeSpan? EventEndTime { get; set; }
         public string? DurationPerDay { get; set; }
         public string? Venue { get; set; }
         public virtual ApplicationUser? ApplicationUser { get; set; }

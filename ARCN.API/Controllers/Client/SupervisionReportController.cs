@@ -1,13 +1,8 @@
-﻿using ARCN.Application.DataModels.Identity;
-using ARCN.Application.Interfaces.Repositories;
+﻿using ARCN.Application.Interfaces.Repositories;
 using ARCN.Application.Interfaces.Services;
-using ARCN.Infrastructure.Services.ApplicationServices;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace ARCN.API.Controllers.Client
 {
@@ -17,20 +12,20 @@ namespace ARCN.API.Controllers.Client
     {
         private readonly ISupervisionReportService supervisionReportService;
         private readonly ILogger<SupervisionReportController> logger;
-        private readonly ISupervisionReportRepository SupervisionReportRepository;
+        private readonly ISupervisionReportRepository supervisionReportRepository;
 
-        public SupervisionReportController(ISupervisionReportService supervisionReportService, ILogger<SupervisionReportController> logger, ISupervisionReportRepository SupervisionReportRepository)
+        public SupervisionReportController(ISupervisionReportService supervisionReportService, ILogger<SupervisionReportController> logger, ISupervisionReportRepository supervisionReportRepository)
         {
             this.supervisionReportService = supervisionReportService;
             this.logger = logger;
-            this.SupervisionReportRepository = SupervisionReportRepository;
+            this.supervisionReportRepository = supervisionReportRepository;
         }
         [HttpGet("GetAllSupervisionReport")]
         [EnableQuery]
         public async ValueTask<ActionResult<SupervisionReport>> GetAllSupervisionReport()
         {
 
-            var result = SupervisionReportRepository.FindAll();
+            var result = supervisionReportRepository.FindAll().OrderBy(x => x.CreatedDate);
 
             return Ok(result);
 
@@ -40,7 +35,7 @@ namespace ARCN.API.Controllers.Client
         [EnableQuery]
         public async ValueTask<ActionResult<SupervisionReport>> GetSupervisionReportById(int key)
         {
-            var result = await SupervisionReportRepository.FindByIdAsync(key);
+            var result = await supervisionReportRepository.FindByIdAsync(key);
 
             return Ok(result);
 

@@ -30,7 +30,7 @@ namespace ARCN.API.Controllers.Client
         public async ValueTask<ActionResult<Extension>> GetAllExtension()
         {
 
-            var result = ExtensionRepository.FindAll();
+            var result = ExtensionRepository.FindAll().OrderBy(x => x.CreatedDate);
 
             return Ok(result);
 

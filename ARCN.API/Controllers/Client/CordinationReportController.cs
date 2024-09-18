@@ -31,7 +31,7 @@ namespace ARCN.API.Controllers.Client
         public async ValueTask<ActionResult<CordinationReport>> GetAllCordinationReport()
         {
 
-            var result = cordinationReportRepository.FindAll();
+            var result = cordinationReportRepository.FindAll().OrderBy(x => x.CreatedDate);
             return Ok(result);
 
 

@@ -30,7 +30,7 @@ namespace ARCN.API.Controllers.Client
         public async ValueTask<ActionResult<Entrepreneurship>> GetAllEntrepreneurship()
         {
 
-            var result = EntrepreneurshipRepository.FindAll();
+            var result = EntrepreneurshipRepository.FindAll().OrderBy(x => x.CreatedDate);
 
             return Ok(result);
 

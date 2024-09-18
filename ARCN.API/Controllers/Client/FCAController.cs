@@ -30,7 +30,7 @@ namespace ARCN.API.Controllers.Client
         public async ValueTask<ActionResult<FCA>> GetAllFCA()
         {
 
-            var result = FCARepository.FindAll();
+            var result = FCARepository.FindAll().OrderBy(x => x.CreatedDate);
 
             return Ok(result);
 

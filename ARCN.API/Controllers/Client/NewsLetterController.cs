@@ -29,7 +29,7 @@ namespace ARCN.API.Controllers.Client
         public async ValueTask<ActionResult<NewsLetter>> GetAllNewsLetter()
         {
 
-            var result = newsLetterRepository.FindAll();
+            var result = newsLetterRepository.FindAll().OrderBy(x => x.CreatedDate);
 
             return Ok(result);
 

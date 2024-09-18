@@ -29,7 +29,7 @@ namespace ARCN.API.Controllers.Client
         public async ValueTask<ActionResult<Naris>> GetAllNaris()
         {
 
-            var result = narisRepository.FindAll();
+            var result = narisRepository.FindAll().OrderBy(x => x.CreatedDate);
             return Ok(result);
 
         }

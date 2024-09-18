@@ -30,7 +30,7 @@ namespace ARCN.API.Controllers.Client
         public async ValueTask<ActionResult<Blog>> GetAllBlog()
         {
 
-            var result = blogRepository.FindAll();
+            var result = blogRepository.FindAll().OrderBy(x => x.CreatedDate); 
 
             return Ok(result);
 

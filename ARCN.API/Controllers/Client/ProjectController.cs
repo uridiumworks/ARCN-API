@@ -30,7 +30,7 @@ namespace ARCN.API.Controllers.Client
         public async ValueTask<ActionResult<Project>> GetAllProject()
         {
 
-            var result = ProjectRepository.FindAll();
+            var result = ProjectRepository.FindAll().OrderBy(x => x.CreatedDate);
 
             return Ok(result);
 

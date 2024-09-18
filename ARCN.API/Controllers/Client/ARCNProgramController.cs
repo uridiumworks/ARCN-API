@@ -17,20 +17,20 @@ namespace ARCN.API.Controllers.Client
     {
         private readonly IProgramService programService;
         private readonly ILogger<ARCNProgramController> logger;
-        private readonly IProgramRepository ProgramRepository;
+        private readonly IProgramRepository programRepository;
 
-        public ARCNProgramController(IProgramService programService, ILogger<ARCNProgramController> logger, IProgramRepository ProgramRepository)
+        public ARCNProgramController(IProgramService programService, ILogger<ARCNProgramController> logger, IProgramRepository programRepository)
         {
             this.programService = programService;
             this.logger = logger;
-            this.ProgramRepository = ProgramRepository;
+            this.programRepository = programRepository;
         }
         [HttpGet("GetAllProgram")]
         [EnableQuery]
         public async ValueTask<ActionResult<ARCNProgram>> GetAllProgram()
         {
 
-            var result = ProgramRepository.FindAll();
+            var result = programRepository.FindAll().OrderBy(x=>x.CreatedDate);
 
             return Ok(result);
 
@@ -40,7 +40,7 @@ namespace ARCN.API.Controllers.Client
         [EnableQuery]
         public async ValueTask<ActionResult<ARCNProgram>> GetProgramById(int key)
         {
-            var result = await ProgramRepository.FindByIdAsync(key);
+            var result = await programRepository.FindByIdAsync(key);
 
             return Ok(result);
 
