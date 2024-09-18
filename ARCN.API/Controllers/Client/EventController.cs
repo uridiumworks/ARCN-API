@@ -30,7 +30,7 @@ namespace ARCN.API.Controllers.Client
         public async ValueTask<ActionResult<Event>> GetAllEvent()
         {
 
-            var result = EventRepository.FindAll();
+            var result = EventRepository.FindAll().OrderBy(x => x.CreatedDate);
 
             return Ok(result);
 

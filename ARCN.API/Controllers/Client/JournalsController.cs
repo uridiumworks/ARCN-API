@@ -29,7 +29,7 @@ namespace ARCN.API.Controllers.Client
         public async ValueTask<ActionResult<Journals>> GetJournals()
         {
 
-            var result = journalRepository.FindAll();
+            var result = journalRepository.FindAll().OrderBy(x => x.CreatedDate);
             return Ok(result);
 
 
