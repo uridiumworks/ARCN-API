@@ -74,7 +74,18 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
 
             if (result.Succeeded)
             {
-
+                //int passwordLength = 8; // Specify desired password length
+                //string password = GenerateRandomPassword(passwordLength);
+                //var PasswordResponse = await userManager.AddPasswordAsync(user, password);
+                //if (!PasswordResponse.Succeeded)
+                //{
+                //    return new ResponseModel<UserResponseDataModel>
+                //    {
+                //        Success = true,
+                //        Message = "Password Not successfully added",
+                //        StatusCode = 200
+                //    };
+                //}
                 var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.MobilePhone, user.PhoneNumber),
@@ -379,6 +390,20 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             return false;
 
         }
+        public static string GenerateRandomPassword(int length)
+        {
+            const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+[]{}|;:,.<>?";
+            StringBuilder password = new StringBuilder();
+            Random random = new Random();
 
-    }
+            for (int i = 0; i < length; i++)
+            {
+                int index = random.Next(validChars.Length);
+                password.Append(validChars[index]);
+            }
+
+            return password.ToString();
+        }
+    
+}
 }
