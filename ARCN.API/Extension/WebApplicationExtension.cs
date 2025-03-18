@@ -154,7 +154,7 @@ namespace ARCN.API.Extensions
                         ValidateAudience = false,
                         ValidateLifetime = false,
                         ValidateIssuerSigningKey = false,
-                       // RoleClaimType = ClaimTypes.Role
+                        // RoleClaimType = ClaimTypes.Role
                     };
                 });
 
@@ -201,7 +201,8 @@ namespace ARCN.API.Extensions
             app.UseAuthentication();  // Ensure this comes before UseAuthorization
             app.UseAuthorization();
             app.UseSession();
-            app.MapControllers().RequireAuthorization();
+            //app.MapControllers().RequireAuthorization();
+            app.MapControllers();
 
             return app;
         }

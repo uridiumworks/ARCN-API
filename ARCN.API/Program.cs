@@ -41,7 +41,7 @@ try
     .ConfigureServices()
     .ConfigurePipeline();
 
-    app.SeedDatabase();
+    //app.SeedDatabase();
 
 
     app.Run();

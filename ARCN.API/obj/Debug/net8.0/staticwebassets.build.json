@@ -1,11 +1,12 @@
 {
   "Version": 1,
-  "Hash": "7bzIc1W0aj5s6J82HDv63rxVctYvBh1ph/5P0JzMybU=",
+  "Hash": "nbE8xzTq0lKO+JZtll+CohdyGTY6lSH1uGuP9IJqJIU=",
   "Source": "ARCN.API",
   "BasePath": "_content/ARCN.API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": []
+  "Assets": [],
+  "Endpoints": []
 }

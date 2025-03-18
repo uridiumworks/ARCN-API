@@ -20,6 +20,7 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
         private readonly IUserProfileRepository userProfileRepository;
         private readonly IUserprofileService userprofileService;
         private readonly IUserIdentityService userIdentityService;
+        private readonly IStateRepository stateRepository;
         private readonly IMapper mapper;
 
         public NarisService(
@@ -27,13 +28,15 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
             IUnitOfWork unitOfWork,
             IUserProfileRepository userProfileRepository,
             IUserprofileService userprofileService,
-            IUserIdentityService userIdentityService,IMapper mapper) {
+            IUserIdentityService userIdentityService, IMapper mapper, IStateRepository stateRepository)
+        {
             this.narisRepository = narisRepository;
             this.unitOfWork = unitOfWork;
             this.userProfileRepository = userProfileRepository;
             this.userprofileService = userprofileService;
             this.userIdentityService = userIdentityService;
             this.mapper = mapper;
+            this.stateRepository = stateRepository;
         }
         public async ValueTask<ResponseModel<Naris>> AddNarisAsync(Naris model,CancellationToken cancellationToken)
         {
@@ -51,6 +54,18 @@ namespace ARCN.Infrastructure.Services.ApplicationServices
                     };
                 }
                 model.UserProfileId = user.Id;
+                var resstate = await stateRepository.GetStates();
+                var state = resstate.FirstOrDefault(c => c.StateId == model.StateId);
+                if (state == null)
+                {
+                    return new ResponseModel<Naris>
+                    {
+                        Success = false,
+                        Message = "Invalid state Id",
+                        StatusCode = 404
+                    };
+                }
+                model.StateId = state.StateId;
                 var result= await  narisRepository.AddAsync(model,cancellationToken);
                 unitOfWork.SaveChanges();
                 return new ResponseModel<Naris>
